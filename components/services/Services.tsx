@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import ServiceCard from './ServiceCard'
-import { AnimatedGrid, SectionWrapper } from '@/components/ui/SectionWrapper'
+import { SectionWrapper } from '@/components/ui/SectionWrapper'
 
 interface Service {
   id: string
@@ -48,6 +48,7 @@ export default function Services() {
   }, [])
 
   const displayServices = useMemo(() => (showAll ? services : services.slice(0, 8)), [services, showAll])
+  const categories = useMemo(() => new Set(services.map((service) => service.category)).size, [services])
 
   if (loading) {
     return (
@@ -74,21 +75,58 @@ export default function Services() {
   return (
     <SectionWrapper id="services" className="section-shell py-28 md:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <motion.div className="mb-14 text-center" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }}>
-          <span className="public-eyebrow">Our Services</span>
-          <h2 className="public-section-title mt-4">
-            Tailored <span className="public-heading-gradient">Salon Services</span>
-          </h2>
-          <p className="public-section-copy mx-auto mt-5">
-            Discover precision cutting, bespoke color, and restorative treatments crafted around your style, hair type, and lifestyle.
-          </p>
-        </motion.div>
+        <div className="mb-14 grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(260px,0.8fr)] lg:items-end">
+          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }}>
+            <span className="public-eyebrow">Our Services</span>
+            <h2 className="public-section-title mt-4 max-w-[12ch]">
+              Tailored <span className="public-heading-gradient">Salon Services</span>
+            </h2>
+            <p className="public-section-copy mt-5 max-w-2xl">
+              Precision cutting, bespoke color, and restorative rituals planned around your hair goals, maintenance routine, and signature style.
+            </p>
+          </motion.div>
 
-        <AnimatedGrid className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 auto-rows-fr">
+          <motion.div
+            className="public-panel grid gap-4 p-5 sm:grid-cols-3"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ delay: 0.08 }}
+          >
+            <div>
+              <div className="public-metric-value text-gold-primary">{services.length}</div>
+              <div className="public-metric-label">Signature Services</div>
+            </div>
+            <div>
+              <div className="public-metric-value text-gold-primary">{categories}</div>
+              <div className="public-metric-label">Service Categories</div>
+            </div>
+            <div>
+              <div className="public-metric-value text-gold-primary">Consult-first</div>
+              <div className="public-metric-label">Every visit is tailored</div>
+            </div>
+          </motion.div>
+        </div>
+
+        <motion.div
+          key={showAll ? 'all-services' : 'featured-services'}
+          className="grid grid-cols-1 gap-5 auto-rows-fr sm:grid-cols-2 lg:grid-cols-4"
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+        >
           {displayServices.map((service, index) => (
-            <ServiceCard key={service.id} {...service} index={index} />
+            <motion.div
+              key={service.id}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ delay: Math.min(index * 0.04, 0.22) }}
+            >
+              <ServiceCard {...service} index={index} />
+            </motion.div>
           ))}
-        </AnimatedGrid>
+        </motion.div>
 
         {services.length > 8 ? (
           <div className="mt-12 text-center">

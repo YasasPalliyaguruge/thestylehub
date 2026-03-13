@@ -26,6 +26,19 @@ export default function Header() {
     }
   }, [isMobileMenuOpen])
 
+  useEffect(() => {
+    if (!isMobileMenuOpen) return
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [isMobileMenuOpen])
+
   const handleNavClick = (href: string) => {
     const id = href.replace('#', '')
     scrollToElement(id)
@@ -51,15 +64,17 @@ export default function Header() {
             className="rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-primary/60"
             aria-label="Go to top"
           >
-            <GoldShimmerText size="lg">THE STYLE HUB</GoldShimmerText>
+            <GoldShimmerText size="md" className="text-[1.45rem] tracking-[0.04em] lg:text-[1.65rem]">
+              THE STYLE HUB
+            </GoldShimmerText>
           </button>
 
-          <div className="hidden items-center gap-7 md:flex">
+          <div className="hidden items-center gap-6 md:flex">
             {navigation.map((item) => (
               <button
                 key={item.name}
                 onClick={() => handleNavClick(item.href)}
-                className="text-sm tracking-wide text-gray-200 transition-colors hover:text-gold-primary"
+                className="text-sm tracking-[0.06em] text-gray-200 transition-colors hover:text-gold-primary"
               >
                 {item.name}
               </button>
@@ -73,6 +88,8 @@ export default function Header() {
             type="button"
             className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gold-primary/20 text-white md:hidden"
             aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-navigation"
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}
           >
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -83,6 +100,7 @@ export default function Header() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
+            id="mobile-navigation"
             className="fixed inset-0 z-50 bg-black-primary/92 backdrop-blur-xl md:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

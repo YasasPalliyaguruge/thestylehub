@@ -223,7 +223,7 @@ export default function Portfolio() {
                           </button>
 
                           <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-                          <div className="absolute bottom-0 left-0 right-0 p-4">
+                          <div className="absolute bottom-0 left-0 right-0 min-h-[5.5rem] p-4">
                             <span className="text-xs uppercase tracking-[0.15em] text-gold-primary">{category}</span>
                             <h3 className="mt-1 text-xl font-semibold text-white">{stylist}</h3>
                           </div>

@@ -29,8 +29,10 @@ export default function PricingCard({ name, description, price, services, popula
       ) : null}
 
       <div className="mb-7 text-center">
-        <h3 className="text-2xl font-semibold text-white">{name}</h3>
-        {description ? <p className="mt-2 text-sm text-gray-400">{description}</p> : null}
+        <h3 className="min-h-[3.5rem] text-2xl font-semibold text-white">{name}</h3>
+        <div className="min-h-[3.5rem]">
+          {description ? <p className="mt-2 text-sm leading-6 text-gray-400">{description}</p> : null}
+        </div>
       </div>
 
       <div className="mb-8 text-center">
@@ -50,7 +52,7 @@ export default function PricingCard({ name, description, price, services, popula
 
       <button
         type="button"
-        className={`w-full rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+        className={`mt-auto w-full rounded-xl px-4 py-3 text-center text-sm font-semibold transition-all ${
           popular
             ? 'bg-gold-primary text-black hover:shadow-[0_0_24px_rgba(212,175,55,0.3)]'
             : 'border border-gold-primary/35 text-gold-primary hover:bg-gold-primary/10'

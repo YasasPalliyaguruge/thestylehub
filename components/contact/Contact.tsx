@@ -22,12 +22,12 @@ const inputClass =
 
 function InfoCard({ title, children, icon: Icon }: { title: string; children: React.ReactNode; icon: typeof MapPin }) {
   return (
-    <article className="public-card p-6">
+    <article className="public-card public-lead-card flex h-full flex-col p-6">
       <span className="public-icon-wrap mb-3">
         <Icon className="h-5 w-5" />
       </span>
       <h3 className="mb-2 text-lg font-semibold text-white">{title}</h3>
-      <div className="text-sm leading-7 text-gray-300">{children}</div>
+      <div className="flex-1 text-sm leading-7 text-gray-300">{children}</div>
     </article>
   )
 }
@@ -92,15 +92,15 @@ export default function Contact() {
         >
           <span className="public-eyebrow">Contact</span>
           <h2 className="public-section-title mt-4">
-            Lets Plan Your <span className="public-heading-gradient">Next Visit</span>
+            Let&apos;s Plan Your <span className="public-heading-gradient">Next Visit</span>
           </h2>
           <p className="public-section-copy mx-auto mt-5">
-            Questions, consultations, or private bookings. We are here to help you choose the right service.
+            Questions, consultations, or private bookings. We are here to guide you toward the right service and the right stylist.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
-          <SlideInLeft className="space-y-5">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.02fr)]">
+          <SlideInLeft className="grid gap-5 sm:grid-cols-2">
             <InfoCard title="Visit Us" icon={MapPin}>
               No. 123, Main Street
               <br />
@@ -139,6 +139,14 @@ export default function Contact() {
                 </a>
               </div>
             </InfoCard>
+
+            <article className="public-panel flex h-full flex-col p-6 sm:col-span-2">
+              <p className="text-xs uppercase tracking-[0.22em] text-gold-primary">Private Consultations</p>
+              <h3 className="mt-3 text-2xl font-semibold text-white">Need guidance before you book?</h3>
+              <p className="mt-3 text-sm leading-7 text-gray-300">
+                Share your hair goals, preferred maintenance level, and ideal timing. We will help you choose the right appointment flow before you arrive.
+              </p>
+            </article>
           </SlideInLeft>
 
           <SlideInRight>
@@ -151,7 +159,7 @@ export default function Contact() {
                 <p className="mt-2 text-gray-300">Thanks for reaching out. We will reply shortly.</p>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="public-card space-y-5 p-7">
+              <form onSubmit={handleSubmit(onSubmit)} className="public-panel space-y-5 p-7">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-white">Name</label>
                   <input {...register('name')} type="text" className={inputClass} />

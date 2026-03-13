@@ -58,16 +58,17 @@ export default function Footer() {
 
   const socialLinks = useMemo<SocialLink[]>(() => {
     if (businessInfo?.social_links) {
-      return Object.entries(businessInfo.social_links).map(([name, href]) => ({
-        name,
-        href: String(href),
-      }))
+      return Object.entries(businessInfo.social_links)
+        .map(([name, href]) => ({
+          name,
+          href: String(href),
+        }))
+        .filter((link) => link.href && link.href !== '#')
     }
 
     return [
       { name: 'Instagram', href: 'https://instagram.com' },
       { name: 'Facebook', href: 'https://facebook.com' },
-      { name: 'Website', href: '#' },
     ]
   }, [businessInfo?.social_links])
 

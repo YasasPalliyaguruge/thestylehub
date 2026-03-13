@@ -19,7 +19,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: 'The Style Hub | Premium Unisex Salon Experience',
-  description: 'Award-winning luxury salon experience. Expert stylists, premium services, and an atmosphere of elegance.',
+  description: 'Luxury salon experience with precision styling, bespoke color, premium services, and an atmosphere of elegance.',
   keywords: ['salon', 'hair salon', 'beauty salon', 'unisex salon', 'luxury salon'],
 }
 

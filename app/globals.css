@@ -502,18 +502,18 @@
 .hero-heading {
   font-family: var(--font-syne), sans-serif;
   color: #ffffff;
-  font-size: clamp(2.4rem, 6.8vw, 6.2rem);
-  line-height: 0.98;
-  letter-spacing: -0.02em;
-  margin-bottom: 1.45rem;
+  font-size: clamp(3rem, 5vw, 5rem);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+  margin-bottom: 1.1rem;
   text-shadow:
     0 2px 18px rgba(0, 0, 0, 0.45),
     0 0 52px rgba(212, 175, 55, 0.08);
 }
 
 .hero-subtitle {
-  font-size: clamp(1rem, 1.8vw, 1.2rem);
-  line-height: 1.72;
+  font-size: clamp(1rem, 1.45vw, 1.14rem);
+  line-height: 1.7;
   color: rgba(222, 222, 222, 0.9);
   max-width: 43rem;
   margin-bottom: 2rem;

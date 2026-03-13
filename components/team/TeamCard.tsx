@@ -38,7 +38,7 @@ function scrollToBooking(name: string) {
 export default function TeamCard({ name, role, specialties, image, bio, experience, rating, clients, index }: TeamCardProps) {
   return (
     <motion.article
-      className="public-card public-card-hover flex h-full flex-col overflow-hidden"
+      className="public-card public-card-hover public-lead-card flex h-full flex-col overflow-hidden"
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
@@ -46,53 +46,69 @@ export default function TeamCard({ name, role, specialties, image, bio, experien
     >
       <div className="relative aspect-[3/4] border-b border-gold-primary/15">
         <Image src={image} alt={`${name}, ${role}`} fill className="object-cover" sizes="(max-width: 768px) 100vw, 420px" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-        <div className="absolute bottom-3 left-3">
-          <span className="rounded-full border border-gold-primary/30 bg-black/65 px-3 py-1 text-[0.62rem] uppercase tracking-[0.16em] text-gold-primary">
-            {role}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/35 to-transparent" />
+        <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4">
+          <div>
+            <span className="rounded-full border border-gold-primary/30 bg-black/65 px-3 py-1 text-[0.62rem] uppercase tracking-[0.16em] text-gold-primary">
+              {role}
+            </span>
+            <h3 className="mt-3 text-2xl font-semibold text-white">{name}</h3>
+          </div>
+          <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-black/55 px-3 py-1 text-[0.65rem] uppercase tracking-[0.14em] text-white/80">
+            <Star className="h-3.5 w-3.5 text-gold-primary" />
+            {rating ?? '4.9'}
           </span>
         </div>
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="text-xl font-semibold text-white">{name}</h3>
-        <p className="mt-1 text-sm leading-6 text-gray-400">{bio || 'Trusted stylist delivering high-finish, personalized looks.'}</p>
+        <p className="min-h-[4.5rem] text-sm leading-6 text-gray-400 lg:min-h-[5.25rem]">
+          {bio || 'Trusted stylist delivering high-finish, personalized looks.'}
+        </p>
 
-        <div className="mt-4 grid grid-cols-3 gap-2 text-xs text-gray-300">
-          <div className="rounded-lg border border-gold-primary/15 bg-black/45 p-2 text-center">
-            <Clock3 className="mx-auto mb-1 h-3.5 w-3.5 text-gold-primary" />
+        <div className="mt-5 grid grid-cols-3 gap-2 text-xs text-gray-300">
+          <div className="rounded-xl border border-gold-primary/15 bg-black/45 p-2.5 text-center">
+            <Clock3 className="mx-auto mb-1.5 h-3.5 w-3.5 text-gold-primary" />
             <div className="font-semibold text-white">{experience ?? '-'}y</div>
             <div className="text-gray-500">Experience</div>
           </div>
-          <div className="rounded-lg border border-gold-primary/15 bg-black/45 p-2 text-center">
-            <Star className="mx-auto mb-1 h-3.5 w-3.5 text-gold-primary" />
+          <div className="rounded-xl border border-gold-primary/15 bg-black/45 p-2.5 text-center">
+            <Star className="mx-auto mb-1.5 h-3.5 w-3.5 text-gold-primary" />
             <div className="font-semibold text-white">{rating ?? '-'}</div>
             <div className="text-gray-500">Rating</div>
           </div>
-          <div className="rounded-lg border border-gold-primary/15 bg-black/45 p-2 text-center">
-            <Users className="mx-auto mb-1 h-3.5 w-3.5 text-gold-primary" />
+          <div className="rounded-xl border border-gold-primary/15 bg-black/45 p-2.5 text-center">
+            <Users className="mx-auto mb-1.5 h-3.5 w-3.5 text-gold-primary" />
             <div className="font-semibold text-white">{clients ? `${Math.round(clients / 100) / 10}k` : '-'}</div>
             <div className="text-gray-500">Clients</div>
           </div>
         </div>
 
-        {specialties.length ? (
-          <div className="mt-4 flex flex-wrap gap-2">
-            {specialties.slice(0, 3).map((specialty) => (
-              <span key={specialty} className="public-chip !text-[0.58rem]">
-                {specialty}
-              </span>
-            ))}
-          </div>
-        ) : null}
+        <div className="mt-5 min-h-[3.75rem]">
+          {specialties.length ? (
+            <div className="flex flex-wrap gap-2">
+              {specialties.slice(0, 3).map((specialty) => (
+                <span key={specialty} className="public-chip !text-[0.58rem]">
+                  {specialty}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <div aria-hidden="true" />
+          )}
+        </div>
 
-        <button
-          type="button"
-          className="mt-5 rounded-xl border border-gold-primary/30 bg-gold-primary/10 px-4 py-2.5 text-sm font-medium text-gold-primary transition-colors hover:bg-gold-primary hover:text-black"
-          onClick={() => scrollToBooking(name)}
-        >
-          Book with {name.split(' ')[0]}
-        </button>
+        <div className="mt-auto pt-5">
+          <div className="public-divider" />
+          <button
+            type="button"
+            className="mt-5 w-full rounded-xl border border-gold-primary/30 bg-gold-primary/10 px-4 py-3 text-sm font-medium text-gold-primary transition-colors hover:bg-gold-primary hover:text-black"
+            onClick={() => scrollToBooking(name)}
+          >
+            Book with {name.split(' ')[0]}
+          </button>
+        </div>
       </div>
     </motion.article>
   )

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import useEmblaCarousel from 'embla-carousel-react'
-import { ChevronLeft, ChevronRight, Star } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react'
 import { SectionWrapper } from '@/components/ui/SectionWrapper'
 
 interface Testimonial {
@@ -69,6 +69,11 @@ export default function Testimonials() {
     }
   }, [emblaApi, onSelect])
 
+  const averageRating = testimonials.length
+    ? (testimonials.reduce((sum, testimonial) => sum + testimonial.rating, 0) / testimonials.length).toFixed(1)
+    : '0.0'
+  const featuredCount = testimonials.filter((testimonial) => testimonial.featured).length
+
   if (loading) {
     return (
       <section id="testimonials" className="public-section py-32">
@@ -94,30 +99,81 @@ export default function Testimonials() {
   return (
     <SectionWrapper id="testimonials" className="section-shell py-28 md:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <motion.div className="mb-12 text-center" initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }}>
-          <span className="public-eyebrow">Testimonials</span>
-          <h2 className="public-section-title mt-4">
-            Client <span className="public-heading-gradient">Experiences</span>
-          </h2>
-          <p className="public-section-copy mx-auto mt-5">Real stories from clients who trusted us for their style transformation.</p>
-        </motion.div>
+        <div className="mb-12 grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
+          <motion.div
+            className="public-panel p-7 md:p-8"
+            initial={{ opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            <span className="public-eyebrow">Testimonials</span>
+            <h2 className="public-section-title mt-4 max-w-[11ch]">
+              Client <span className="public-heading-gradient">Experiences</span>
+            </h2>
+            <p className="public-section-copy mt-5 max-w-xl">
+              Real feedback from clients who trusted our team for signature cuts, color work, and restorative care.
+            </p>
+            <div className="mt-7 grid gap-4 sm:grid-cols-3">
+              {[
+                { value: `${testimonials.length}`, label: 'Client Stories' },
+                { value: averageRating, label: 'Average Rating' },
+                { value: `${featuredCount}`, label: 'Featured Reviews' },
+              ].map((stat) => (
+                <div key={stat.label} className="public-metric">
+                  <div className="public-metric-value text-gold-primary">{stat.value}</div>
+                  <div className="public-metric-label">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {testimonials[0] ? (
+            <motion.article
+              className="public-card public-lead-card p-7 md:p-8"
+              initial={{ opacity: 0, y: 22 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ delay: 0.08 }}
+            >
+              <Quote className="h-8 w-8 text-gold-primary/70" />
+              <p className="mt-5 text-lg leading-8 text-gray-200">"{testimonials[0].text}"</p>
+              <div className="mt-6 flex items-center gap-1.5 text-gold-primary">
+                {Array.from({ length: testimonials[0].rating }).map((_, index) => (
+                  <Star key={`lead-${index}`} className="h-4 w-4 fill-current" />
+                ))}
+              </div>
+              <div className="mt-6 flex items-end justify-between gap-4 border-t border-gold-primary/15 pt-5">
+                <div>
+                  <p className="text-base font-medium text-white">{testimonials[0].name}</p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.16em] text-gold-primary/90">{testimonials[0].service}</p>
+                </div>
+                <span className="public-chip !text-[0.58rem]">Featured Review</span>
+              </div>
+            </motion.article>
+          ) : null}
+        </div>
 
         <div className="relative">
           <div ref={emblaRef} className="overflow-hidden">
             <div className="flex gap-5">
-              {testimonials.map((testimonial) => (
-                <article key={testimonial.id} className="public-card min-w-[86%] flex-[0_0_86%] p-7 sm:min-w-[48%] sm:flex-[0_0_48%] lg:min-w-[32%] lg:flex-[0_0_32%]">
+              {testimonials.map((testimonial, index) => (
+                <article key={testimonial.id} className="public-card flex min-w-[86%] flex-[0_0_86%] flex-col p-7 sm:min-w-[48%] sm:flex-[0_0_48%] lg:min-w-[32%] lg:flex-[0_0_32%]">
                   <div className="mb-4 flex items-center gap-1.5 text-gold-primary">
                     {Array.from({ length: testimonial.rating }).map((_, index) => (
                       <Star key={`${testimonial.id}-${index}`} className="h-4 w-4 fill-current" />
                     ))}
                   </div>
 
-                  <p className="mb-6 text-sm leading-7 text-gray-300">"{testimonial.text}"</p>
+                  <p className="mb-6 flex-1 text-sm leading-7 text-gray-300">"{testimonial.text}"</p>
 
-                  <div className="border-t border-gold-primary/15 pt-4">
+                  <div className="mt-auto border-t border-gold-primary/15 pt-4">
                     <p className="font-medium text-white">{testimonial.name}</p>
                     <p className="mt-1 text-xs uppercase tracking-[0.12em] text-gold-primary/90">{testimonial.service}</p>
+                    {testimonial.featured && index !== 0 ? (
+                      <span className="mt-4 inline-flex rounded-full border border-gold-primary/25 px-3 py-1 text-[0.58rem] uppercase tracking-[0.18em] text-gold-primary">
+                        Featured
+                      </span>
+                    ) : null}
                   </div>
                 </article>
               ))}
@@ -150,19 +206,6 @@ export default function Testimonials() {
             </button>
           </div>
         </div>
-
-        <motion.div className="mx-auto mt-14 grid max-w-3xl grid-cols-3 gap-4" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }}>
-          {[
-            { value: '5000+', label: 'Happy Clients' },
-            { value: '4.9', label: 'Average Rating' },
-            { value: '10+', label: 'Years Experience' },
-          ].map((stat) => (
-            <div key={stat.label} className="public-card py-4 text-center">
-              <div className="text-2xl font-semibold text-gold-primary">{stat.value}</div>
-              <div className="mt-1 text-xs uppercase tracking-[0.1em] text-gray-400">{stat.label}</div>
-            </div>
-          ))}
-        </motion.div>
       </div>
     </SectionWrapper>
   )

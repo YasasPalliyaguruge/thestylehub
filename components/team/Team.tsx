@@ -89,15 +89,38 @@ export default function Team() {
   return (
     <SectionWrapper id="team" className="section-shell py-28 md:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <motion.div className="mb-14 text-center" initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }}>
-          <span className="public-eyebrow">Our Team</span>
-          <h2 className="public-section-title mt-4">
-            Meet Our <span className="public-heading-gradient">Expert Stylists</span>
-          </h2>
-          <p className="public-section-copy mx-auto mt-5">
-            A team of specialists trusted for precision, artistry, and personalized care in every appointment.
-          </p>
-        </motion.div>
+        <div className="mb-14 grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(260px,0.95fr)] lg:items-end">
+          <motion.div initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }}>
+            <span className="public-eyebrow">Our Team</span>
+            <h2 className="public-section-title mt-4 max-w-[12ch]">
+              Meet Our <span className="public-heading-gradient">Expert Stylists</span>
+            </h2>
+            <p className="public-section-copy mt-5 max-w-2xl">
+              Specialists chosen for technical precision, thoughtful consultation, and the ability to tailor every finish to the client in front of them.
+            </p>
+          </motion.div>
+
+          <motion.div
+            className="public-panel grid gap-4 p-5 sm:grid-cols-3"
+            initial={{ opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ delay: 0.08 }}
+          >
+            <div>
+              <div className="public-metric-value text-gold-primary">{team.length}</div>
+              <div className="public-metric-label">Lead Stylists</div>
+            </div>
+            <div>
+              <div className="public-metric-value text-gold-primary">1:1</div>
+              <div className="public-metric-label">Consultation Focus</div>
+            </div>
+            <div>
+              <div className="public-metric-value text-gold-primary">High-touch</div>
+              <div className="public-metric-label">Premium Service Flow</div>
+            </div>
+          </motion.div>
+        </div>
 
         <AnimatedGrid className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
           {team.map((member, index) => (
