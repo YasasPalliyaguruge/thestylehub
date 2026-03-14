@@ -167,13 +167,14 @@ function PosInner() {
 
   const availableBookings = useMemo(() => {
     const query = bookingSearch.toLowerCase().trim()
-    if (!query) return bookings
+    if (!query) return bookings.slice(0, 50) // Limit to 50 for performance
     return bookings.filter(
       (booking) =>
         booking.name.toLowerCase().includes(query) ||
         booking.email.toLowerCase().includes(query) ||
+        booking.phone?.toLowerCase().includes(query) ||
         booking.id.toLowerCase().includes(query)
-    )
+    ).slice(0, 50) // Limit results
   }, [bookings, bookingSearch])
 
   const subtotal = useMemo(
@@ -360,31 +361,48 @@ function PosInner() {
                 <Search className="w-4 h-4" />
                 Search bookings
               </div>
-              <input
-                type="text"
-                value={bookingSearch}
-                onChange={(event) => setBookingSearch(event.target.value)}
-                placeholder="Search by name, email, or booking ID"
-                className="px-4 py-2.5"
-              />
-              <div className="grid gap-2 max-h-56 overflow-y-auto">
-                {availableBookings.map((booking) => (
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={bookingSearch}
+                  onChange={(event) => setBookingSearch(event.target.value)}
+                  placeholder="Search by name, email, phone, or booking ID"
+                  className="pl-10 pr-4 py-2.5 w-full"
+                />
+                {bookingSearch && (
                   <button
-                    key={booking.id}
-                    onClick={() => setSelectedBookingId(booking.id)}
-                    className={`text-left px-4 py-3 rounded-xl border ${
-                      selectedBookingId === booking.id
-                        ? 'border-gold-primary/60 bg-gold-primary/10'
-                        : 'border-gold-primary/15 bg-black/40'
-                    }`}
+                    onClick={() => setBookingSearch('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
                   >
-                    <div className="text-sm text-white font-medium">{booking.name}</div>
-                    <div className="text-xs text-gray-400">{booking.email}</div>
-                    <div className="text-xs text-gray-500">
-                      {booking.date} | {booking.time} | {booking.stylist}
-                    </div>
+                    ×
                   </button>
-                ))}
+                )}
+              </div>
+              <div className="grid gap-2 max-h-56 overflow-y-auto">
+                {availableBookings.length === 0 ? (
+                  <div className="text-sm text-gray-400 py-4 text-center">
+                    {bookingSearch ? 'No bookings found matching your search.' : 'No bookings available.'}
+                  </div>
+                ) : (
+                  availableBookings.map((booking) => (
+                    <button
+                      key={booking.id}
+                      onClick={() => setSelectedBookingId(booking.id)}
+                      className={`text-left px-4 py-3 rounded-xl border hover:border-gold-primary/40 transition-colors ${
+                        selectedBookingId === booking.id
+                          ? 'border-gold-primary/60 bg-gold-primary/10'
+                          : 'border-gold-primary/15 bg-black/40 hover:bg-black/60'
+                      }`}
+                    >
+                      <div className="text-sm text-white font-medium">{booking.name}</div>
+                      <div className="text-xs text-gray-400">{booking.email}</div>
+                      <div className="text-xs text-gray-500">
+                        {booking.date} | {booking.time} | {booking.stylist}
+                      </div>
+                    </button>
+                  ))
+                )}
               </div>
             </AdminCard>
           )}
