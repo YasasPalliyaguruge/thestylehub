@@ -22,6 +22,14 @@ interface Booking {
   time: string
   status: 'pending' | 'confirmed' | 'cancelled' | 'completed'
   created_at: string
+  employee_id?: string | null
+}
+
+interface TeamMember {
+  id: string
+  name: string
+  role: string
+  active: boolean
 }
 
 function asServiceList(value: unknown): Array<{ name: string; price: number }> {
@@ -38,10 +46,44 @@ export default function BookingDetailsPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [role, setRole] = useState<'admin' | 'employee'>('admin')
+  const [invoiceId, setInvoiceId] = useState<string | null>(null)
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([])
+  const [employeeId, setEmployeeId] = useState('')
 
   useEffect(() => {
     fetchBooking()
+    fetchRole()
+    fetchInvoice()
+    fetchTeam()
   }, [bookingId])
+
+  const fetchRole = async () => {
+    try {
+      const response = await fetch('/api/admin/settings')
+      const data = await response.json()
+      if (response.ok && data.data?.role) {
+        setRole(data.data.role)
+      }
+    } catch (err) {
+      console.error('Error fetching role:', err)
+    }
+  }
+
+  const fetchInvoice = async () => {
+    try {
+      const response = await fetch(`/api/admin/pos/invoices?bookingId=${bookingId}`)
+      const data = await response.json()
+      const list = data.data?.invoices || []
+      if (list.length > 0) {
+        setInvoiceId(list[0].id)
+      } else {
+        setInvoiceId(null)
+      }
+    } catch (err) {
+      console.error('Error fetching invoice:', err)
+    }
+  }
 
   const fetchBooking = async () => {
     try {
@@ -50,6 +92,7 @@ export default function BookingDetailsPage() {
 
       if (response.ok && data.data) {
         setBooking(data.data)
+        setEmployeeId(data.data.employee_id || '')
       } else {
         setError(data.error || 'Booking not found')
       }
@@ -61,7 +104,18 @@ export default function BookingDetailsPage() {
     }
   }
 
+  const fetchTeam = async () => {
+    try {
+      const response = await fetch('/api/admin/team')
+      const data = await response.json()
+      setTeamMembers((data.data || []).filter((member: TeamMember) => member.active))
+    } catch (err) {
+      console.error('Error fetching team members:', err)
+    }
+  }
+
   const updateStatus = async (status: string) => {
+    if (role !== 'admin') return
     setSaving(true)
     setError('')
 
@@ -85,7 +139,34 @@ export default function BookingDetailsPage() {
     }
   }
 
+  const updateEmployee = async (nextEmployeeId: string) => {
+    if (role !== 'admin') return
+    setSaving(true)
+    setError('')
+
+    try {
+      const response = await fetch(`/api/admin/bookings/${bookingId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ employee_id: nextEmployeeId || null }),
+      })
+
+      const data = await response.json()
+      if (response.ok) {
+        setBooking(data.data)
+        setEmployeeId(data.data.employee_id || '')
+      } else {
+        setError(data.error || 'Failed to update employee')
+      }
+    } catch {
+      setError('Failed to update employee')
+    } finally {
+      setSaving(false)
+    }
+  }
+
   const deleteBooking = async () => {
+    if (role !== 'admin') return
     if (!confirm('Are you sure you want to delete this booking? This action cannot be undone.')) return
     try {
       const response = await fetch(`/api/admin/bookings/${bookingId}`, { method: 'DELETE' })
@@ -137,6 +218,22 @@ export default function BookingDetailsPage() {
             <p><span className="text-gray-500">Date:</span> {new Date(booking.date + 'T00:00:00').toLocaleDateString()}</p>
             <p><span className="text-gray-500">Time:</span> {booking.time}</p>
             <p><span className="text-gray-500">Stylist:</span> {booking.stylist}</p>
+            <div className="flex items-center gap-3">
+              <span className="text-gray-500">Assigned employee:</span>
+              <select
+                value={employeeId}
+                disabled={role !== 'admin' || saving}
+                onChange={(event) => updateEmployee(event.target.value)}
+                className="px-3 py-2"
+              >
+                <option value="">Unassigned</option>
+                {teamMembers.map((member) => (
+                  <option key={member.id} value={member.id}>
+                    {member.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </AdminCard>
 
@@ -164,7 +261,7 @@ export default function BookingDetailsPage() {
             <button
               key={status}
               onClick={() => updateStatus(status)}
-              disabled={saving || booking.status === status}
+              disabled={saving || booking.status === status || role !== 'admin'}
               className={booking.status === status ? 'admin-btn-primary capitalize' : 'admin-btn-secondary capitalize'}
             >
               {status}
@@ -172,11 +269,22 @@ export default function BookingDetailsPage() {
           ))}
         </div>
         <div className="flex flex-wrap gap-3">
+          {invoiceId ? (
+            <Link href={`/admin/pos/invoices/${invoiceId}`} className="admin-btn-secondary">
+              Print Invoice
+            </Link>
+          ) : (
+            <Link href={`/admin/pos?bookingId=${booking.id}`} className="admin-btn-secondary">
+              Create Invoice
+            </Link>
+          )}
           <a href={`mailto:${booking.email}`} className="admin-btn-secondary">Send Email</a>
           {booking.phone && <a href={`tel:${booking.phone}`} className="admin-btn-secondary">Call</a>}
-          <button onClick={deleteBooking} className="admin-btn-secondary text-red-300 border-red-500/30">
-            Delete Booking
-          </button>
+          {role === 'admin' && (
+            <button onClick={deleteBooking} className="admin-btn-secondary text-red-300 border-red-500/30">
+              Delete Booking
+            </button>
+          )}
         </div>
       </AdminCard>
     </AdminPageTransition>

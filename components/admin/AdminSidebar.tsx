@@ -20,17 +20,22 @@ import {
   ChevronDown,
   LogOut,
   ShieldCheck,
+  Receipt,
+  UserCog,
+  Wallet,
 } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 interface NavItem {
   label: string
   href?: string
   icon: LucideIcon
+  roles?: string[]
   children?: Array<{
     label: string
     href: string
     icon: LucideIcon
+    roles?: string[]
   }>
 }
 
@@ -39,6 +44,7 @@ const navigation: NavItem[] = [
   {
     label: 'Content',
     icon: Scissors,
+    roles: ['admin'],
     children: [
       { label: 'Services', href: '/admin/services', icon: Scissors },
       { label: 'Team', href: '/admin/team', icon: Users },
@@ -52,18 +58,23 @@ const navigation: NavItem[] = [
     icon: CalendarDays,
     children: [
       { label: 'Bookings', href: '/admin/bookings', icon: CalendarDays },
-      { label: 'Messages', href: '/admin/messages', icon: Mail },
+      { label: 'POS', href: '/admin/pos', icon: Receipt },
+      { label: 'Messages', href: '/admin/messages', icon: Mail, roles: ['admin'] },
     ],
   },
+  { label: 'Staff', href: '/admin/staff', icon: Users, roles: ['admin'] },
   {
     label: 'Brand',
     icon: Building2,
+    roles: ['admin'],
     children: [
       { label: 'Business Info', href: '/admin/business', icon: Building2 },
       { label: 'Hero Content', href: '/admin/content', icon: Megaphone },
     ],
   },
-  { label: 'Settings', href: '/admin/settings', icon: Settings },
+  { label: 'Finance', href: '/admin/finance', icon: Wallet, roles: ['admin'] },
+  { label: 'Users', href: '/admin/users', icon: UserCog, roles: ['admin'] },
+  { label: 'Settings', href: '/admin/settings', icon: Settings, roles: ['admin'] },
 ]
 
 interface AdminSidebarProps {
@@ -73,6 +84,32 @@ interface AdminSidebarProps {
 export default function AdminSidebar({ onNavigate }: AdminSidebarProps) {
   const pathname = usePathname()
   const [expandedItems, setExpandedItems] = useState<string[]>(['Content', 'Operations', 'Brand'])
+  const [role, setRole] = useState<'admin' | 'employee'>('admin')
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      try {
+        const response = await fetch('/api/admin/settings')
+        const data = await response.json()
+        if (response.ok && data.data?.role) {
+          setRole(data.data.role)
+        }
+      } catch (error) {
+        console.error('Error fetching role:', error)
+      }
+    }
+
+    fetchRole()
+  }, [])
+
+  const filteredNavigation = useMemo(() => {
+    return navigation
+      .filter((item) => !item.roles || item.roles.includes(role))
+      .map((item) => ({
+        ...item,
+        children: item.children?.filter((child) => !child.roles || child.roles.includes(role)),
+      }))
+  }, [role])
 
   const pageTitle = useMemo(() => {
     const leaf = pathname?.split('/').filter(Boolean).at(-1) || 'admin'
@@ -111,7 +148,7 @@ export default function AdminSidebar({ onNavigate }: AdminSidebarProps) {
       </div>
 
       <nav className="flex-1 p-4 overflow-y-auto space-y-2">
-        {navigation.map((item) => {
+        {filteredNavigation.map((item) => {
           const Icon = item.icon
           const hasChildren = !!item.children?.length
           const isExpanded = expandedItems.includes(item.label)

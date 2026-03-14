@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
-import { withAuth, apiResponse, apiError } from '@/lib/auth-helpers'
+import { withAuth, withRoles, apiResponse, apiError } from '@/lib/auth-helpers'
 import { createAuditLog, AuditActions, AuditEntityTypes } from '@/lib/audit-log'
 import { z } from 'zod'
 
@@ -21,7 +21,6 @@ const teamSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   role: z.string().min(1, 'Role is required'),
   specialties: z.array(z.string()).optional(),
-  image_url: z.string().url().optional().or(z.literal('')),
   bio: z.string().optional(),
   experience_years: z.number().int().min(0).optional(),
   rating: z.number().min(1).max(5).optional(),
@@ -33,7 +32,7 @@ const teamSchema = z.object({
 export const GET = withAuth(async () => {
   try {
     const team = await query(`
-      SELECT id, name, role, specialties, image_url, bio, experience_years, rating::float as rating, client_count, active, display_order, created_at
+      SELECT id, name, role, specialties, bio, experience_years, rating::float as rating, client_count, active, display_order, created_at
       FROM team_members
       ORDER BY display_order ASC, name ASC
     `)
@@ -48,20 +47,19 @@ export const GET = withAuth(async () => {
   }
 })
 
-export const POST = withAuth(async (user, request) => {
+export const POST = withRoles(['admin'], async (user, request) => {
   try {
     const body = await request.json()
     const validatedData = teamSchema.parse(body)
 
     const result = await query(
-      `INSERT INTO team_members (name, role, specialties, image_url, bio, experience_years, rating, client_count, display_order, active)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      `INSERT INTO team_members (name, role, specialties, bio, experience_years, rating, client_count, display_order, active)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
        RETURNING *`,
       [
         validatedData.name,
         validatedData.role,
         validatedData.specialties ? JSON.stringify(validatedData.specialties) : null,
-        validatedData.image_url || null,
         validatedData.bio || null,
         validatedData.experience_years || null,
         validatedData.rating || null,

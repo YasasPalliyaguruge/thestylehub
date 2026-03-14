@@ -1,4 +1,4 @@
-import { withAuth, apiResponse, apiError } from '@/lib/auth-helpers'
+import { withRoles, apiResponse, apiError } from '@/lib/auth-helpers'
 import { query } from '@/lib/db'
 
 function normalizeServices(value: unknown): Array<{ name: string; price: number }> {
@@ -27,7 +27,7 @@ function normalizeServices(value: unknown): Array<{ name: string; price: number 
     .filter((item): item is { name: string; price: number } => item !== null)
 }
 
-export const GET = withAuth(async (user, request) => {
+export const GET = withRoles(['admin', 'employee'], async (user, request) => {
   try {
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status')

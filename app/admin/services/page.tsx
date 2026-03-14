@@ -32,10 +32,24 @@ export default function ServicesPage() {
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive'>('all')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [role, setRole] = useState<'admin' | 'employee'>('admin')
 
   useEffect(() => {
     fetchServices()
+    fetchRole()
   }, [])
+
+  const fetchRole = async () => {
+    try {
+      const response = await fetch('/api/admin/settings')
+      const data = await response.json()
+      if (response.ok && data.data?.role) {
+        setRole(data.data.role)
+      }
+    } catch (error) {
+      console.error('Error fetching role:', error)
+    }
+  }
 
   const fetchServices = async () => {
     try {
@@ -180,9 +194,11 @@ export default function ServicesPage() {
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-end gap-2">
                       <Link href={`/admin/services/${service.id}`} className="admin-btn-secondary">Edit</Link>
-                      <button onClick={() => handleDelete(service.id)} className="admin-btn-secondary text-red-300 border-red-500/30">
-                        Delete
-                      </button>
+                      {role === 'admin' && (
+                        <button onClick={() => handleDelete(service.id)} className="admin-btn-secondary text-red-300 border-red-500/30">
+                          Delete
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>

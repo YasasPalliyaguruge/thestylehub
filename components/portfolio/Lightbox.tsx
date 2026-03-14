@@ -101,11 +101,11 @@ export default function Lightbox({ item, onClose, onNext, onPrevious }: Lightbox
             onTouchEnd={() => setIsDragging(false)}
           >
             <div className="absolute inset-0">
-              <Image src={item.before} alt="Before" fill className="object-cover" sizes="(max-width: 768px) 100vw, 80vw" priority />
+              <Image src={item.after} alt="After" fill className="object-cover" sizes="(max-width: 768px) 100vw, 80vw" priority />
             </div>
 
             <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}>
-              <Image src={item.after} alt="After" fill className="object-cover" sizes="(max-width: 768px) 100vw, 80vw" priority />
+              <Image src={item.before} alt="Before" fill className="object-cover" sizes="(max-width: 768px) 100vw, 80vw" priority />
             </div>
 
             <motion.div className="absolute bottom-0 top-0 z-10 w-1 bg-white" style={{ left: `${sliderPosition}%` }} animate={{ scale: isDragging ? 1.4 : 1 }}>

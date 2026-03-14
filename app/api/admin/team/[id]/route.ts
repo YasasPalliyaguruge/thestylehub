@@ -1,4 +1,4 @@
-import { withAuth, apiResponse, apiError } from '@/lib/auth-helpers'
+import { withAuth, withRoles, apiResponse, apiError } from '@/lib/auth-helpers'
 import { createAuditLog, AuditActions, AuditEntityTypes } from '@/lib/audit-log'
 import { query } from '@/lib/db'
 import { z } from 'zod'
@@ -20,7 +20,6 @@ const teamSchema = z.object({
   name: z.string().min(1).optional(),
   role: z.string().min(1).optional(),
   specialties: z.array(z.string()).optional(),
-  image_url: z.string().url().optional().or(z.literal('')),
   bio: z.string().optional(),
   experience_years: z.number().int().min(0).optional(),
   rating: z.number().min(1).max(5).optional(),
@@ -43,7 +42,7 @@ export const GET = withAuth(async (user, request, context) => {
   }
 })
 
-export const PUT = withAuth(async (user, request, context) => {
+export const PUT = withRoles(['admin'], async (user, request, context) => {
   try {
     const { id } = await context.params
     const body = await request.json()
@@ -90,13 +89,13 @@ export const PUT = withAuth(async (user, request, context) => {
   }
 })
 
-export const DELETE = withAuth(async (user, request, context) => {
+export const DELETE = withRoles(['admin'], async (user, request, context) => {
   try {
     const { id } = await context.params
     const currentResult = await query('SELECT * FROM team_members WHERE id = $1', [id])
     if (!currentResult?.length) return apiError('Team member not found', 404)
 
-    await query('UPDATE team_members SET active = false WHERE id = $1', [id])
+    await query('DELETE FROM team_members WHERE id = $1', [id])
 
     await createAuditLog({
       admin_id: user.id,

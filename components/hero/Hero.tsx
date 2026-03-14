@@ -45,7 +45,7 @@ function HeroTrustRow() {
   )
 
   return (
-    <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5 lg:justify-start">
+    <div className="mt-5 flex flex-wrap items-center justify-center gap-2 sm:mt-7 lg:justify-start">
       {trustItems.map(({ icon: Icon, text }) => (
         <span key={text} className="public-chip">
           <Icon className="h-3.5 w-3.5 text-gold-primary" />
@@ -64,7 +64,7 @@ function HeroMetrics() {
   ]
 
   return (
-    <div className="mt-10 grid max-w-[36rem] gap-3 sm:grid-cols-3">
+    <div className="mt-6 grid max-w-[36rem] gap-3 sm:mt-8 sm:grid-cols-3">
       {items.map((item) => (
         <div key={item.label} className="public-metric">
           <div className="public-metric-value text-gold-primary">{item.value}</div>
@@ -101,7 +101,7 @@ export default function Hero() {
 
   if (loading || !heroContent) {
     return (
-      <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black">
+      <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden bg-black sm:min-h-screen">
         <div className="absolute inset-0 bg-[radial-gradient(900px_420px_at_50%_18%,rgba(212,175,55,0.08),transparent_68%)]" />
         <motion.div
           className="h-10 w-10 rounded-full border border-gold-primary/35"
@@ -121,9 +121,9 @@ export default function Hero() {
   return (
     <section data-hero-root className="public-section-shell relative overflow-hidden bg-black" aria-label="Hero section">
       <div className="public-grid-fade absolute inset-0 opacity-80" />
-      <div className="public-spotlight left-[-6%] top-[10%] h-[320px] w-[320px] bg-[radial-gradient(circle,rgba(212,175,55,0.12),transparent_72%)] md:h-[480px] md:w-[480px]" />
-      <div className="relative z-10 mx-auto max-w-7xl px-6 pb-16 pt-[4.1rem] md:px-10 md:pb-14 md:pt-[4.2rem] lg:px-12">
-        <div className="grid min-h-[calc(100svh-5rem)] items-center gap-10 lg:grid-cols-[minmax(0,38rem)_minmax(420px,1fr)] lg:gap-8">
+      <div className="public-spotlight left-[-6%] top-[8%] h-[240px] w-[240px] bg-[radial-gradient(circle,rgba(212,175,55,0.12),transparent_72%)] sm:h-[320px] sm:w-[320px] md:h-[480px] md:w-[480px]" />
+      <div className="relative z-10 mx-auto max-w-7xl px-5 pb-8 pt-[4rem] sm:px-6 sm:pb-10 sm:pt-[5rem] lg:px-12 lg:pb-14">
+        <div className="grid items-center gap-8 lg:min-h-[calc(100svh-8rem)] lg:grid-cols-[minmax(0,38rem)_minmax(360px,1fr)] lg:gap-8">
           <div data-hero-copy className="max-w-4xl text-center lg:max-w-[39rem] lg:pl-2 lg:text-left xl:max-w-[40rem]">
             <Reveal delay={0.1} type="fade">
               <span className="hero-badge">{badge}</span>
@@ -136,11 +136,11 @@ export default function Hero() {
             </Reveal>
 
             <Reveal delay={0.28}>
-              <p className="hero-subtitle mx-auto mt-5 max-w-[34rem] text-balance lg:mx-0">{subtitle}</p>
+              <p className="hero-subtitle mx-auto mt-4 max-w-[34rem] text-balance lg:mx-0">{subtitle}</p>
             </Reveal>
 
             <Reveal delay={0.38}>
-              <div className="mt-3 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
+              <div className="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
                 <Button size="lg" className="hero-cta-primary" onClick={() => scrollToElement('booking')}>
                   {heroContent.cta_button_text || 'Book Appointment'}
                 </Button>
@@ -166,7 +166,7 @@ export default function Hero() {
           </div>
 
           <Reveal delay={0.24} type="fade">
-            <div className="relative mx-auto h-[380px] w-full max-w-[500px] overflow-visible sm:h-[500px] sm:max-w-[680px] lg:h-[760px] lg:max-w-[960px] lg:justify-self-end xl:h-[820px] xl:max-w-[1040px]">
+            <div className="relative mx-auto h-[clamp(240px,60vw,360px)] w-full max-w-[420px] overflow-visible sm:h-[420px] sm:max-w-[600px] md:h-[520px] lg:h-[660px] lg:max-w-[840px] lg:justify-self-end xl:h-[720px] xl:max-w-[960px]">
               <HeroMirror />
             </div>
           </Reveal>

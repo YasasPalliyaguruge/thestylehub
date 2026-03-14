@@ -76,8 +76,8 @@ export default function Testimonials() {
 
   if (loading) {
     return (
-      <section id="testimonials" className="public-section py-32">
-        <div className="mx-auto max-w-7xl px-6 text-center lg:px-8">
+      <section id="testimonials" className="public-section py-10 sm:py-14">
+        <div className="mx-auto max-w-7xl px-5 text-center sm:px-6 lg:px-8">
           <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-gold-primary" />
           <p className="mt-4 text-gray-400">Loading testimonials...</p>
         </div>
@@ -87,8 +87,8 @@ export default function Testimonials() {
 
   if (error) {
     return (
-      <section id="testimonials" className="public-section py-32">
-        <div className="mx-auto max-w-7xl px-6 text-center lg:px-8">
+      <section id="testimonials" className="public-section py-10 sm:py-14">
+        <div className="mx-auto max-w-7xl px-5 text-center sm:px-6 lg:px-8">
           <p className="text-red-400">{error}</p>
           <p className="mt-2 text-gray-500">Please refresh the page to try again.</p>
         </div>
@@ -97,11 +97,11 @@ export default function Testimonials() {
   }
 
   return (
-    <SectionWrapper id="testimonials" className="section-shell py-28 md:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mb-12 grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
+    <SectionWrapper id="testimonials" className="section-shell py-10 sm:py-14 lg:py-20">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+        <div className="mb-6 grid gap-5 sm:mb-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
           <motion.div
-            className="public-panel p-7 md:p-8"
+            className="public-panel p-[var(--card-pad)] sm:p-[calc(var(--card-pad)+0.25rem)]"
             initial={{ opacity: 0, y: 22 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
@@ -110,10 +110,10 @@ export default function Testimonials() {
             <h2 className="public-section-title mt-4 max-w-[11ch]">
               Client <span className="public-heading-gradient">Experiences</span>
             </h2>
-            <p className="public-section-copy mt-5 max-w-xl">
+            <p className="public-section-copy mt-4 max-w-xl">
               Real feedback from clients who trusted our team for signature cuts, color work, and restorative care.
             </p>
-            <div className="mt-7 grid gap-4 sm:grid-cols-3">
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
               {[
                 { value: `${testimonials.length}`, label: 'Client Stories' },
                 { value: averageRating, label: 'Average Rating' },
@@ -129,20 +129,20 @@ export default function Testimonials() {
 
           {testimonials[0] ? (
             <motion.article
-              className="public-card public-lead-card p-7 md:p-8"
+              className="public-card public-lead-card p-[var(--card-pad)] sm:p-[calc(var(--card-pad)+0.25rem)]"
               initial={{ opacity: 0, y: 22 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ delay: 0.08 }}
             >
               <Quote className="h-8 w-8 text-gold-primary/70" />
-              <p className="mt-5 text-lg leading-8 text-gray-200">"{testimonials[0].text}"</p>
+              <p className="mt-4 text-base leading-7 text-gray-200">"{testimonials[0].text}"</p>
               <div className="mt-6 flex items-center gap-1.5 text-gold-primary">
                 {Array.from({ length: testimonials[0].rating }).map((_, index) => (
                   <Star key={`lead-${index}`} className="h-4 w-4 fill-current" />
                 ))}
               </div>
-              <div className="mt-6 flex items-end justify-between gap-4 border-t border-gold-primary/15 pt-5">
+              <div className="mt-5 flex items-end justify-between gap-4 border-t border-gold-primary/15 pt-4">
                 <div>
                   <p className="text-base font-medium text-white">{testimonials[0].name}</p>
                   <p className="mt-1 text-xs uppercase tracking-[0.16em] text-gold-primary/90">{testimonials[0].service}</p>
@@ -155,16 +155,16 @@ export default function Testimonials() {
 
         <div className="relative">
           <div ref={emblaRef} className="overflow-hidden">
-            <div className="flex gap-5">
+            <div className="flex gap-3 sm:gap-4">
               {testimonials.map((testimonial, index) => (
-                <article key={testimonial.id} className="public-card flex min-w-[86%] flex-[0_0_86%] flex-col p-7 sm:min-w-[48%] sm:flex-[0_0_48%] lg:min-w-[32%] lg:flex-[0_0_32%]">
-                  <div className="mb-4 flex items-center gap-1.5 text-gold-primary">
+                <article key={testimonial.id} className="public-card flex min-w-[86%] flex-[0_0_86%] flex-col p-[var(--card-pad)] sm:min-w-[48%] sm:flex-[0_0_48%] lg:min-w-[32%] lg:flex-[0_0_32%] sm:p-[calc(var(--card-pad)+0.25rem)]">
+                  <div className="mb-3 flex items-center gap-1.5 text-gold-primary">
                     {Array.from({ length: testimonial.rating }).map((_, index) => (
                       <Star key={`${testimonial.id}-${index}`} className="h-4 w-4 fill-current" />
                     ))}
                   </div>
 
-                  <p className="mb-6 flex-1 text-sm leading-7 text-gray-300">"{testimonial.text}"</p>
+                  <p className="mb-5 flex-1 text-sm leading-7 text-gray-300">"{testimonial.text}"</p>
 
                   <div className="mt-auto border-t border-gold-primary/15 pt-4">
                     <p className="font-medium text-white">{testimonial.name}</p>
@@ -180,12 +180,12 @@ export default function Testimonials() {
             </div>
           </div>
 
-          <div className="mt-6 flex items-center justify-center gap-2">
+          <div className="mt-4 flex items-center justify-center gap-2">
             <button
               type="button"
               onClick={() => emblaApi?.scrollPrev()}
               disabled={!canPrev}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gold-primary/25 text-gold-primary disabled:opacity-40"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gold-primary/25 text-gold-primary disabled:opacity-40"
               aria-label="Previous testimonial"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -199,7 +199,7 @@ export default function Testimonials() {
               type="button"
               onClick={() => emblaApi?.scrollNext()}
               disabled={!canNext}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gold-primary/25 text-gold-primary disabled:opacity-40"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gold-primary/25 text-gold-primary disabled:opacity-40"
               aria-label="Next testimonial"
             >
               <ChevronRight className="h-4 w-4" />

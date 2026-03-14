@@ -144,4 +144,7 @@ export const AuditEntityTypes = {
   BOOKING: 'booking',
   CONTACT_MESSAGE: 'contact_message',
   ADMIN_USER: 'admin_user',
+  POS_INVOICE: 'pos_invoice',
+  EMPLOYEE_SERVICE_LOG: 'employee_service_log',
+  EMPLOYEE_PAYMENT: 'employee_payment',
 } as const

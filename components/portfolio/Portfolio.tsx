@@ -98,8 +98,8 @@ export default function Portfolio() {
 
   if (loading) {
     return (
-      <section id="portfolio" className="public-section py-24">
-        <div className="mx-auto max-w-7xl px-6 text-center lg:px-8">
+      <section id="portfolio" className="public-section py-10 sm:py-14 lg:py-20">
+        <div className="mx-auto max-w-7xl px-5 text-center sm:px-6 lg:px-8">
           <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-gold-primary" />
           <p className="mt-4 text-gray-400">Loading portfolio...</p>
         </div>
@@ -109,8 +109,8 @@ export default function Portfolio() {
 
   if (error) {
     return (
-      <section id="portfolio" className="public-section py-24">
-        <div className="mx-auto max-w-7xl px-6 text-center lg:px-8">
+      <section id="portfolio" className="public-section py-10 sm:py-14 lg:py-20">
+        <div className="mx-auto max-w-7xl px-5 text-center sm:px-6 lg:px-8">
           <p className="text-red-400">{error}</p>
           <p className="mt-2 text-gray-500">Please refresh the page to try again.</p>
         </div>
@@ -120,8 +120,8 @@ export default function Portfolio() {
 
   if (!portfolio.length) {
     return (
-      <section id="portfolio" className="public-section py-24">
-        <div className="mx-auto max-w-7xl px-6 text-center lg:px-8">
+      <section id="portfolio" className="public-section py-10 sm:py-14 lg:py-20">
+        <div className="mx-auto max-w-7xl px-5 text-center sm:px-6 lg:px-8">
           <p className="text-gray-400">No transformations available yet.</p>
         </div>
       </section>
@@ -130,22 +130,22 @@ export default function Portfolio() {
 
   return (
     <>
-      <SectionWrapper id="portfolio" className="section-shell py-24 md:py-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <motion.div
-            className="mb-12 text-center"
-            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-            whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-          >
+    <SectionWrapper id="portfolio" className="section-shell py-10 sm:py-14 lg:py-20">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+        <motion.div
+          className="mb-6 text-center sm:mb-8"
+          initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+          whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+        >
             <span className="public-eyebrow">Our Work</span>
             <h2 className="public-section-title mt-4">
               Transformation <span className="public-heading-gradient">Gallery</span>
             </h2>
-            <p className="public-section-copy mx-auto mt-5">
-              Browse high-finish before and after results crafted by our stylist team.
-            </p>
-          </motion.div>
+          <p className="public-section-copy mx-auto mt-4">
+            Browse high-finish before and after results crafted by our stylist team.
+          </p>
+        </motion.div>
 
           <div
             className="relative"
@@ -169,7 +169,7 @@ export default function Portfolio() {
               aria-label="Previous transformation"
               onClick={scrollPrev}
               disabled={!canScrollPrev}
-              className="absolute -left-2 top-1/2 z-20 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-xl border border-gold-primary/25 bg-black/80 text-gold-primary disabled:opacity-35 lg:-left-5"
+              className="absolute -left-2 top-1/2 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-xl border border-gold-primary/25 bg-black/80 text-gold-primary disabled:opacity-35 lg:-left-5"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
@@ -185,7 +185,7 @@ export default function Portfolio() {
                   return (
                     <div
                       key={item.id}
-                      className="min-w-[250px] flex-[0_0_88%] pr-4 sm:min-w-[290px] sm:flex-[0_0_62%] lg:min-w-[320px] lg:flex-[0_0_34%] xl:flex-[0_0_30%]"
+                      className="min-w-[220px] flex-[0_0_88%] pr-3 sm:min-w-[290px] sm:flex-[0_0_62%] lg:min-w-[320px] lg:flex-[0_0_34%] xl:flex-[0_0_30%]"
                     >
                       <motion.article
                         className="public-card overflow-hidden"
@@ -203,17 +203,17 @@ export default function Portfolio() {
                             style={{ width: '100%', height: '100%' }}
                           />
 
-                          <span className="absolute left-4 top-4 z-10 rounded-full border border-white/25 bg-black/75 px-3 py-1 text-xs uppercase tracking-wider text-white">
+                          <span className="absolute left-3 top-3 z-10 rounded-full border border-white/25 bg-black/75 px-3 py-1 text-[0.65rem] uppercase tracking-wider text-white">
                             Before
                           </span>
-                          <span className="absolute right-14 top-4 z-10 rounded-full bg-gold-primary px-3 py-1 text-xs uppercase tracking-wider text-black">
+                          <span className="absolute right-12 top-3 z-10 rounded-full bg-gold-primary px-3 py-1 text-[0.65rem] uppercase tracking-wider text-black">
                             After
                           </span>
 
                           <button
                             type="button"
                             aria-label={`Open ${category} transformation`}
-                            className="absolute right-4 top-4 z-20 rounded-full bg-white/90 p-2.5 text-black shadow-lg"
+                            className="absolute right-3 top-3 z-20 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-black shadow-lg"
                             onClick={(event) => {
                               event.stopPropagation()
                               setSelectedImage(item)
@@ -223,7 +223,7 @@ export default function Portfolio() {
                           </button>
 
                           <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-                          <div className="absolute bottom-0 left-0 right-0 min-h-[5.5rem] p-4">
+                          <div className="absolute bottom-0 left-0 right-0 min-h-[4rem] p-3">
                             <span className="text-xs uppercase tracking-[0.15em] text-gold-primary">{category}</span>
                             <h3 className="mt-1 text-xl font-semibold text-white">{stylist}</h3>
                           </div>
@@ -240,28 +240,32 @@ export default function Portfolio() {
               aria-label="Next transformation"
               onClick={scrollNext}
               disabled={!canScrollNext}
-              className="absolute -right-2 top-1/2 z-20 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-xl border border-gold-primary/25 bg-black/80 text-gold-primary disabled:opacity-35 lg:-right-5"
+              className="absolute -right-2 top-1/2 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-xl border border-gold-primary/25 bg-black/80 text-gold-primary disabled:opacity-35 lg:-right-5"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>
 
-          <div className="mt-6 flex justify-center gap-2" role="tablist" aria-label="Transformation slide selectors">
+          <div className="mt-4 flex justify-center gap-1" role="tablist" aria-label="Transformation slide selectors">
             {scrollSnaps.map((_, index) => (
               <button
                 key={`dot-${index}`}
                 type="button"
-                className={`h-2.5 w-2.5 rounded-full transition-all ${
-                  index === selectedIndex ? 'scale-110 bg-gold-primary' : 'bg-gold-primary/30'
-                }`}
+                className="inline-flex h-11 w-11 items-center justify-center"
                 aria-label={`Go to slide ${index + 1}`}
                 aria-current={index === selectedIndex ? 'true' : undefined}
                 onClick={() => scrollTo(index)}
-              />
+              >
+                <span
+                  className={`h-2.5 w-2.5 rounded-full transition-all ${
+                    index === selectedIndex ? 'scale-110 bg-gold-primary' : 'bg-gold-primary/30'
+                  }`}
+                />
+              </button>
             ))}
           </div>
 
-          <p className="mt-4 text-center text-sm text-gray-500">
+          <p className="mt-3 text-center text-xs text-gray-500">
             {portfolio.length} transformations. Use arrows, wheel, drag, swipe, or dots to navigate.
           </p>
         </div>

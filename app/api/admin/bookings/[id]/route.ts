@@ -1,4 +1,4 @@
-import { withAuth, apiResponse, apiError } from '@/lib/auth-helpers'
+import { withRoles, apiResponse, apiError } from '@/lib/auth-helpers'
 import { createAuditLog, AuditActions, AuditEntityTypes } from '@/lib/audit-log'
 import { query } from '@/lib/db'
 import { z } from 'zod'
@@ -30,10 +30,11 @@ function normalizeServices(value: unknown): Array<{ name: string; price: number 
 }
 
 const bookingUpdateSchema = z.object({
-  status: z.enum(['pending', 'confirmed', 'cancelled', 'completed']),
+  status: z.enum(['pending', 'confirmed', 'cancelled', 'completed']).optional(),
+  employee_id: z.string().uuid().optional().nullable(),
 })
 
-export const GET = withAuth(async (user, request, context) => {
+export const GET = withRoles(['admin', 'employee'], async (user, request, context) => {
   try {
     const { id } = await context.params
     const result = await query('SELECT * FROM bookings WHERE id = $1', [id])
@@ -48,7 +49,7 @@ export const GET = withAuth(async (user, request, context) => {
   }
 })
 
-export const PATCH = withAuth(async (user, request, context) => {
+export const PATCH = withRoles('admin', async (user, request, context) => {
   try {
     const { id } = await context.params
     const body = await request.json()
@@ -58,10 +59,145 @@ export const PATCH = withAuth(async (user, request, context) => {
 
     const validatedData = bookingUpdateSchema.parse(body)
 
+    const updates: string[] = []
+    const values: any[] = []
+    let paramIndex = 1
+
+    if (validatedData.status) {
+      updates.push(`status = $${paramIndex++}`)
+      values.push(validatedData.status)
+    }
+
+    if (validatedData.employee_id !== undefined) {
+      updates.push(`employee_id = $${paramIndex++}`)
+      values.push(validatedData.employee_id || null)
+    }
+
+    if (!updates.length) {
+      return apiResponse({
+        ...currentResult[0],
+        services: normalizeServices(currentResult[0].services),
+      })
+    }
+
+    values.push(id)
     const result = await query(
-      'UPDATE bookings SET status = $1 WHERE id = $2 RETURNING *',
-      [validatedData.status, id]
+      `UPDATE bookings SET ${updates.join(', ')} WHERE id = $${paramIndex} RETURNING *`,
+      values
     )
+
+    const nextStatus = validatedData.status || currentResult[0]?.status
+    const nextEmployeeId = validatedData.employee_id !== undefined
+      ? validatedData.employee_id || null
+      : currentResult[0]?.employee_id || null
+
+    if (nextStatus === 'completed' && currentResult[0]?.status !== 'completed') {
+      const services = normalizeServices(currentResult[0].services)
+      const total = services.reduce((sum, service) => sum + (service.price || 0), 0)
+      const occurredAt = currentResult[0].date
+        ? new Date(`${currentResult[0].date}T00:00:00`).toISOString()
+        : new Date().toISOString()
+      const employeeId = nextEmployeeId
+
+      await query(
+        `INSERT INTO finance_ledger (
+          entry_type,
+          source_type,
+          source_id,
+          category,
+          description,
+          amount,
+          payment_method,
+          occurred_at,
+          created_by
+        )
+        SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9
+        WHERE NOT EXISTS (
+          SELECT 1 FROM finance_ledger
+          WHERE entry_type = $1 AND source_type = $2 AND source_id = $3
+        )`,
+        [
+          'income',
+          'booking',
+          id,
+          'Booking',
+          `Booking income from ${currentResult[0].name || 'client'}`,
+          Math.max(total, 0),
+          null,
+          occurredAt,
+          user.id,
+        ]
+      )
+
+      if (employeeId) {
+        const existing = await query(
+          `SELECT 1 FROM employee_service_logs WHERE source_type = $1 AND source_id = $2 AND employee_id = $3 LIMIT 1`,
+          ['booking', id, employeeId]
+        )
+        if (!existing?.length) {
+          for (const service of services) {
+            await query(
+              `INSERT INTO employee_service_logs (
+                employee_id,
+                source_type,
+                source_id,
+                service_name,
+                amount,
+                occurred_at,
+                created_by
+              )
+              VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+              [
+                employeeId,
+                'booking',
+                id,
+                service.name,
+                service.price || 0,
+                occurredAt,
+                user.id,
+              ]
+            )
+          }
+        }
+      }
+    }
+
+    if (nextStatus === 'completed' && nextEmployeeId && currentResult[0]?.status === 'completed') {
+      const existing = await query(
+        `SELECT 1 FROM employee_service_logs WHERE source_type = $1 AND source_id = $2 AND employee_id = $3 LIMIT 1`,
+        ['booking', id, nextEmployeeId]
+      )
+      if (!existing?.length) {
+        const services = normalizeServices(currentResult[0].services)
+        const occurredAt = currentResult[0].date
+          ? new Date(`${currentResult[0].date}T00:00:00`).toISOString()
+          : new Date().toISOString()
+
+        for (const service of services) {
+          await query(
+            `INSERT INTO employee_service_logs (
+              employee_id,
+              source_type,
+              source_id,
+              service_name,
+              amount,
+              occurred_at,
+              created_by
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            [
+              nextEmployeeId,
+              'booking',
+              id,
+              service.name,
+              service.price || 0,
+              occurredAt,
+              user.id,
+            ]
+          )
+        }
+      }
+    }
 
     await createAuditLog({
       admin_id: user.id,
@@ -81,7 +217,7 @@ export const PATCH = withAuth(async (user, request, context) => {
   }
 })
 
-export const DELETE = withAuth(async (user, request, context) => {
+export const DELETE = withRoles('admin', async (user, request, context) => {
   try {
     const { id } = await context.params
     const currentResult = await query('SELECT * FROM bookings WHERE id = $1', [id])

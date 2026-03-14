@@ -139,6 +139,9 @@ export default function EditPortfolioPage() {
     if (variant === 'after') setUploadingAfter(true)
 
     try {
+      if (!file.type.startsWith('image/')) {
+        throw new Error('Please select a valid image file.')
+      }
       const secureUrl = await uploadImageToCloudinary(file, { target: 'portfolio', variant })
       setFormData((prev) =>
         variant === 'before'
@@ -146,7 +149,11 @@ export default function EditPortfolioPage() {
           : { ...prev, after_image_url: secureUrl }
       )
     } catch (err: any) {
-      setError(err.message || 'Failed to upload image')
+      if (err?.message?.includes('CLOUDINARY_')) {
+        setError('Cloudinary is not configured. Please set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET.')
+      } else {
+        setError(err.message || 'Failed to upload image')
+      }
     } finally {
       if (variant === 'before') setUploadingBefore(false)
       if (variant === 'after') setUploadingAfter(false)
@@ -187,7 +194,7 @@ export default function EditPortfolioPage() {
               <div className="mt-3 flex items-center gap-3">
                 <label className="admin-btn-secondary cursor-pointer">
                   <Upload className="w-4 h-4" />
-                  {uploadingBefore ? 'Uploading...' : 'Upload Before'}
+                  {uploadingBefore ? 'Uploading...' : formData.before_image_url ? 'Replace Before' : 'Upload Before'}
                   <input
                     type="file"
                     accept="image/*"
@@ -217,7 +224,7 @@ export default function EditPortfolioPage() {
               <div className="mt-3 flex items-center gap-3">
                 <label className="admin-btn-secondary cursor-pointer">
                   <Upload className="w-4 h-4" />
-                  {uploadingAfter ? 'Uploading...' : 'Upload After'}
+                  {uploadingAfter ? 'Uploading...' : formData.after_image_url ? 'Replace After' : 'Upload After'}
                   <input
                     type="file"
                     accept="image/*"

@@ -57,6 +57,18 @@ export async function requireAuth() {
 }
 
 /**
+ * Require a specific role (or set of roles)
+ */
+export async function requireRole(roles: string[] | string) {
+  const user = await requireAuth()
+  const allowed = Array.isArray(roles) ? roles : [roles]
+  if (!allowed.includes(user.role)) {
+    throw new Error('Forbidden')
+  }
+  return user
+}
+
+/**
  * API route helper for protected routes
  * Wrap your API route handlers with this to require authentication
  */
@@ -74,6 +86,36 @@ export function withAuth<T>(
       return handler(session.user, request, context)
     } catch (error: any) {
       if (error?.message === 'Unauthorized') return apiError('Unauthorized', 401)
+      console.error('Protected route error:', error)
+      throw error
+    }
+  }
+}
+
+/**
+ * API route helper with role checks
+ */
+export function withRoles<T>(
+  roles: string[] | string,
+  handler: (user: any, request: Request, context?: any) => Promise<T>
+) {
+  const allowed = Array.isArray(roles) ? roles : [roles]
+  return async (request: Request, context?: any): Promise<T | Response> => {
+    try {
+      const session = await auth()
+
+      if (!session?.user) {
+        return apiError('Unauthorized', 401)
+      }
+
+      if (!allowed.includes(session.user.role)) {
+        return apiError('Forbidden', 403)
+      }
+
+      return handler(session.user, request, context)
+    } catch (error: any) {
+      if (error?.message === 'Unauthorized') return apiError('Unauthorized', 401)
+      if (error?.message === 'Forbidden') return apiError('Forbidden', 403)
       console.error('Protected route error:', error)
       throw error
     }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
-import { withAuth, apiResponse, apiError } from '@/lib/auth-helpers'
+import { withAuth, withRoles, apiResponse, apiError } from '@/lib/auth-helpers'
 import { createAuditLog, AuditActions, AuditEntityTypes } from '@/lib/audit-log'
 import { z } from 'zod'
 
@@ -32,7 +32,7 @@ export const GET = withAuth(async (user, request, context) => {
   }
 })
 
-export const PUT = withAuth(async (user, request, context) => {
+export const PUT = withRoles('admin', async (user, request, context) => {
   try {
     const { id } = await context.params
     const body = await request.json()
@@ -88,7 +88,7 @@ export const PUT = withAuth(async (user, request, context) => {
   }
 })
 
-export const DELETE = withAuth(async (user, request, context) => {
+export const DELETE = withRoles('admin', async (user, request, context) => {
   try {
     const { id } = await context.params
 
@@ -98,7 +98,7 @@ export const DELETE = withAuth(async (user, request, context) => {
       return apiError('Service not found', 404)
     }
 
-    await query('UPDATE services SET active = false WHERE id = $1', [id])
+    await query('DELETE FROM services WHERE id = $1', [id])
 
     await createAuditLog({
       admin_id: user.id,

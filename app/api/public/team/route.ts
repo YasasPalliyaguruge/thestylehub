@@ -18,7 +18,7 @@ function normalizeStringArray(value: unknown): string[] {
 export async function GET() {
   try {
     const team = await query(`
-      SELECT id, name, role, specialties, image_url as image, bio,
+      SELECT id, name, role, specialties, bio,
              experience_years as experience, rating, client_count as clients,
              display_order, active
       FROM team_members

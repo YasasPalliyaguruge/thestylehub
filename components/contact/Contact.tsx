@@ -18,11 +18,11 @@ const contactSchema = z.object({
 type ContactFormData = z.infer<typeof contactSchema>
 
 const inputClass =
-  'w-full rounded-xl border border-gold-primary/20 bg-black-primary/70 px-4 py-3 text-white outline-none transition-colors placeholder:text-gray-500 focus:border-gold-primary/55'
+  'w-full min-h-[44px] rounded-xl border border-gold-primary/20 bg-black-primary/70 px-4 py-3 text-white outline-none transition-colors placeholder:text-gray-500 focus:border-gold-primary/55'
 
 function InfoCard({ title, children, icon: Icon }: { title: string; children: React.ReactNode; icon: typeof MapPin }) {
   return (
-    <article className="public-card public-lead-card flex h-full flex-col p-6">
+    <article className="public-card public-lead-card flex h-full flex-col p-[var(--card-pad)]">
       <span className="public-icon-wrap mb-3">
         <Icon className="h-5 w-5" />
       </span>
@@ -82,10 +82,10 @@ export default function Contact() {
   }
 
   return (
-    <SectionWrapper id="contact" className="section-shell py-28 md:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <SectionWrapper id="contact" className="section-shell py-10 sm:py-14 lg:py-20">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <motion.div
-          className="mb-14 text-center"
+          className="mb-6 text-center sm:mb-8"
           initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
@@ -94,13 +94,13 @@ export default function Contact() {
           <h2 className="public-section-title mt-4">
             Let&apos;s Plan Your <span className="public-heading-gradient">Next Visit</span>
           </h2>
-          <p className="public-section-copy mx-auto mt-5">
+          <p className="public-section-copy mx-auto mt-4">
             Questions, consultations, or private bookings. We are here to guide you toward the right service and the right stylist.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.02fr)]">
-          <SlideInLeft className="grid gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.02fr)]">
+          <SlideInLeft className="grid gap-4 sm:grid-cols-2">
             <InfoCard title="Visit Us" icon={MapPin}>
               No. 123, Main Street
               <br />
@@ -126,13 +126,13 @@ export default function Contact() {
 
             <InfoCard title="Contact Details" icon={Phone}>
               <div className="space-y-2">
-                <a href="tel:+94312234567" className="flex items-center gap-2 transition-colors hover:text-gold-primary">
+                <a href="tel:+94312234567" className="inline-flex min-h-[44px] items-center gap-2 transition-colors hover:text-gold-primary">
                   <Phone className="h-4 w-4 text-gold-primary" />
                   +94 (31) 223-4567
                 </a>
                 <a
                   href="mailto:thestylehub.negombo@gmail.com"
-                  className="flex items-center gap-2 transition-colors hover:text-gold-primary"
+                  className="inline-flex min-h-[44px] items-center gap-2 transition-colors hover:text-gold-primary"
                 >
                   <Mail className="h-4 w-4 text-gold-primary" />
                   thestylehub.negombo@gmail.com
@@ -140,7 +140,7 @@ export default function Contact() {
               </div>
             </InfoCard>
 
-            <article className="public-panel flex h-full flex-col p-6 sm:col-span-2">
+            <article className="public-panel flex h-full flex-col p-[var(--card-pad)] sm:col-span-2">
               <p className="text-xs uppercase tracking-[0.22em] text-gold-primary">Private Consultations</p>
               <h3 className="mt-3 text-2xl font-semibold text-white">Need guidance before you book?</h3>
               <p className="mt-3 text-sm leading-7 text-gray-300">
@@ -151,7 +151,7 @@ export default function Contact() {
 
           <SlideInRight>
             {isSuccess ? (
-              <motion.div className="public-card p-12 text-center" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}>
+              <motion.div className="public-card p-[var(--card-pad)] text-center sm:p-[calc(var(--card-pad)+0.5rem)]" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}>
                 <span className="mx-auto mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-gold-primary text-black">
                   <Mail className="h-6 w-6" />
                 </span>
@@ -159,7 +159,7 @@ export default function Contact() {
                 <p className="mt-2 text-gray-300">Thanks for reaching out. We will reply shortly.</p>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="public-panel space-y-5 p-7">
+              <form onSubmit={handleSubmit(onSubmit)} className="public-panel space-y-3 p-[var(--card-pad)] sm:p-[calc(var(--card-pad)+0.5rem)]">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-white">Name</label>
                   <input {...register('name')} type="text" className={inputClass} />
@@ -190,7 +190,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full rounded-xl bg-gold-primary px-4 py-3 text-sm font-semibold text-black transition-colors hover:bg-gold-light disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full min-h-[44px] rounded-xl bg-gold-primary px-4 py-3 text-sm font-semibold text-black transition-colors hover:bg-gold-light disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isSubmitting ? 'Sending...' : 'Send Message'}
                 </button>
@@ -199,16 +199,15 @@ export default function Contact() {
           </SlideInRight>
         </div>
 
-        <FadeIn className="mt-14 overflow-hidden rounded-2xl border border-gold-primary/20">
+        <FadeIn className="mt-6 overflow-hidden rounded-2xl border border-gold-primary/20 sm:mt-8">
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63366.47843327788!2d79.81961475!3d7.2086956!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2a6c1c531a085%3A0x6b2f0f0f0f0f0f0!2sNegombo%2C%20Sri%20Lanka!5e0!3m2!1sen!2s!4v1705543200000!5m2!1sen!2s"
             width="100%"
-            height="360"
             style={{ border: 0 }}
             allowFullScreen
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            className="grayscale transition-all duration-500 hover:grayscale-0"
+            className="h-[280px] w-full grayscale transition-all duration-500 hover:grayscale-0 sm:h-[320px] lg:h-[360px]"
           />
         </FadeIn>
       </div>

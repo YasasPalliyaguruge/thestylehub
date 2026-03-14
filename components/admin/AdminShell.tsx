@@ -15,6 +15,7 @@ export default function AdminShell({ children }: AdminShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const isLoginPage = pathname === '/admin/login'
+  const isInvoicePrint = pathname?.startsWith('/admin/pos/invoices/')
 
   useEffect(() => {
     if (!mobileOpen) return
@@ -40,7 +41,7 @@ export default function AdminShell({ children }: AdminShellProps) {
     return leaf.replace(/-/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase())
   }, [pathname])
 
-  if (isLoginPage) {
+  if (isLoginPage || isInvoicePrint) {
     return <div className="admin-theme min-h-screen">{children}</div>
   }
 

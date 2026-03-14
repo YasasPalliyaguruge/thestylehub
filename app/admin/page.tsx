@@ -44,6 +44,10 @@ export default async function AdminDashboardPage() {
     redirect('/admin/login')
   }
 
+  if (session.user.role === 'employee') {
+    redirect('/admin/pos')
+  }
+
   const userName = String(session.user?.name || 'Admin')
 
   return (

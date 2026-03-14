@@ -1,4 +1,4 @@
-import { withAuth, apiResponse, apiError } from '@/lib/auth-helpers'
+import { withAuth, withRoles, apiResponse, apiError } from '@/lib/auth-helpers'
 import { createAuditLog, AuditActions, AuditEntityTypes } from '@/lib/audit-log'
 import { query } from '@/lib/db'
 import { z } from 'zod'
@@ -27,7 +27,7 @@ export const GET = withAuth(async () => {
   }
 })
 
-export const POST = withAuth(async (user, request) => {
+export const POST = withRoles('admin', async (user, request) => {
   try {
     const body = await request.json()
     const validatedData = testimonialSchema.parse(body)

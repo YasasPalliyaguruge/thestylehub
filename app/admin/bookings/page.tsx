@@ -36,10 +36,24 @@ export default function BookingsPage() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [role, setRole] = useState<'admin' | 'employee'>('admin')
 
   useEffect(() => {
     fetchBookings()
+    fetchRole()
   }, [])
+
+  const fetchRole = async () => {
+    try {
+      const response = await fetch('/api/admin/settings')
+      const data = await response.json()
+      if (response.ok && data.data?.role) {
+        setRole(data.data.role)
+      }
+    } catch (error) {
+      console.error('Error fetching role:', error)
+    }
+  }
 
   const fetchBookings = async () => {
     try {
@@ -54,6 +68,7 @@ export default function BookingsPage() {
   }
 
   const updateStatus = async (id: string, status: string) => {
+    if (role !== 'admin') return
     try {
       await fetch(`/api/admin/bookings/${id}`, {
         method: 'PATCH',
@@ -63,6 +78,17 @@ export default function BookingsPage() {
       fetchBookings()
     } catch (error) {
       console.error('Error updating status:', error)
+    }
+  }
+
+  const deleteBooking = async (id: string) => {
+    if (role !== 'admin') return
+    if (!confirm('Are you sure you want to delete this booking?')) return
+    try {
+      await fetch(`/api/admin/bookings/${id}`, { method: 'DELETE' })
+      fetchBookings()
+    } catch (error) {
+      console.error('Error deleting booking:', error)
     }
   }
 
@@ -151,6 +177,7 @@ export default function BookingsPage() {
                   <td className="px-6 py-4">
                     <select
                       value={booking.status}
+                      disabled={role !== 'admin'}
                       onChange={(e) => updateStatus(booking.id, e.target.value)}
                       className="px-3 py-2"
                     >
@@ -164,10 +191,15 @@ export default function BookingsPage() {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="flex items-center justify-end">
+                    <div className="flex items-center justify-end gap-2">
                       <Link href={`/admin/bookings/${booking.id}`} className="admin-btn-secondary">
                         View
                       </Link>
+                      {role === 'admin' && (
+                        <button onClick={() => deleteBooking(booking.id)} className="admin-btn-secondary text-red-300 border-red-500/30">
+                          Delete
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>

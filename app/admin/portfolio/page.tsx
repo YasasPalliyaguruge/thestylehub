@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import {
   AdminBadge,
+  AdminCard,
   AdminEmptyState,
   AdminFilterBar,
   AdminLoading,
@@ -26,10 +27,24 @@ export default function PortfolioPage() {
   const [portfolio, setPortfolio] = useState<PortfolioItem[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive'>('all')
+  const [role, setRole] = useState<'admin' | 'employee'>('admin')
 
   useEffect(() => {
     fetchPortfolio()
+    fetchRole()
   }, [])
+
+  const fetchRole = async () => {
+    try {
+      const response = await fetch('/api/admin/settings')
+      const data = await response.json()
+      if (response.ok && data.data?.role) {
+        setRole(data.data.role)
+      }
+    } catch (error) {
+      console.error('Error fetching role:', error)
+    }
+  }
 
   const fetchPortfolio = async () => {
     try {
@@ -102,7 +117,7 @@ export default function PortfolioPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           {filteredPortfolio.map((item) => (
-            <article key={item.id} className="admin-card p-0 overflow-hidden">
+            <AdminCard key={item.id} className="p-0 overflow-hidden">
               <div className="grid grid-cols-2 gap-1">
                 <div className="relative aspect-square">
                   <img src={item.before_image_url} alt="Before" className="w-full h-full object-cover" />
@@ -115,7 +130,9 @@ export default function PortfolioPage() {
               </div>
               <div className="p-4 space-y-2">
                 <div className="flex items-center justify-between">
-                  {item.category ? <AdminBadge>{item.category}</AdminBadge> : <span />}
+                  <div className="flex items-center">
+                    {item.category && <AdminBadge>{item.category}</AdminBadge>}
+                  </div>
                   <button onClick={() => handleToggleActive(item.id, item.active)}>
                     <AdminBadge variant={item.active ? 'active' : 'inactive'}>
                       {item.active ? 'Active' : 'Inactive'}
@@ -127,11 +144,13 @@ export default function PortfolioPage() {
               </div>
               <div className="px-4 py-3 border-t border-gold-primary/10 flex justify-end gap-2">
                 <Link href={`/admin/portfolio/${item.id}`} className="admin-btn-secondary">Edit</Link>
-                <button onClick={() => handleDelete(item.id)} className="admin-btn-secondary text-red-300 border-red-500/30">
-                  Delete
-                </button>
+                {role === 'admin' && (
+                  <button onClick={() => handleDelete(item.id)} className="admin-btn-secondary text-red-300 border-red-500/30">
+                    Delete
+                  </button>
+                )}
               </div>
-            </article>
+            </AdminCard>
           ))}
         </div>
       )}

@@ -27,6 +27,7 @@
 
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: var(--header-offset, 5rem);
   }
 
   body {
@@ -35,6 +36,7 @@
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   /* Custom scrollbar */
@@ -279,8 +281,10 @@
 .admin-theme input[type='number'],
 .admin-theme input[type='tel'],
 .admin-theme input[type='date'],
-.admin-theme input[type='url'],
 .admin-theme input[type='time'],
+.admin-theme input[type='month'],
+.admin-theme input[type='datetime-local'],
+.admin-theme input[type='url'],
 .admin-theme select,
 .admin-theme textarea {
   width: 100%;
@@ -288,6 +292,7 @@
   border: 1px solid var(--admin-border-1);
   border-radius: 0.75rem;
   color: #fff;
+  color-scheme: dark;
   transition: border-color 180ms ease, box-shadow 180ms ease;
 }
 
@@ -297,8 +302,10 @@
 .admin-theme input[type='number']:focus,
 .admin-theme input[type='tel']:focus,
 .admin-theme input[type='date']:focus,
-.admin-theme input[type='url']:focus,
 .admin-theme input[type='time']:focus,
+.admin-theme input[type='month']:focus,
+.admin-theme input[type='datetime-local']:focus,
+.admin-theme input[type='url']:focus,
 .admin-theme select:focus,
 .admin-theme textarea:focus {
   border-color: var(--admin-border-2);
@@ -486,7 +493,7 @@
 .hero-badge {
   display: inline-flex;
   align-items: center;
-  margin-bottom: 1.65rem;
+  margin-bottom: 1.2rem;
   padding: 0.55rem 1rem;
   border-radius: 9999px;
   border: 1px solid rgba(212, 175, 55, 0.28);
@@ -502,8 +509,8 @@
 .hero-heading {
   font-family: var(--font-syne), sans-serif;
   color: #ffffff;
-  font-size: clamp(3rem, 5vw, 5rem);
-  line-height: 0.96;
+  font-size: clamp(2.4rem, 7vw, 5rem);
+  line-height: 1.02;
   letter-spacing: -0.04em;
   margin-bottom: 1.1rem;
   text-shadow:
@@ -512,11 +519,11 @@
 }
 
 .hero-subtitle {
-  font-size: clamp(1rem, 1.45vw, 1.14rem);
-  line-height: 1.7;
+  font-size: clamp(0.98rem, 3.4vw, 1.14rem);
+  line-height: 1.6;
   color: rgba(222, 222, 222, 0.9);
   max-width: 43rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.6rem;
 }
 
 .hero-cta-primary {

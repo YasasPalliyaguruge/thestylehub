@@ -11,6 +11,10 @@ export interface AdminUser {
   role: string
 }
 
+function normalizeEmail(value: string) {
+  return value.trim().toLowerCase()
+}
+
 declare module 'next-auth' {
   interface User {
     id: string
@@ -26,9 +30,10 @@ declare module 'next-auth' {
 
 async function getUserByEmail(email: string): Promise<AdminUser | null> {
   try {
+    const normalized = normalizeEmail(email)
     const result = await query<AdminUser>(
-      'SELECT id, email, name, role FROM admin_users WHERE email = $1 AND active = true',
-      [email]
+      'SELECT id, email, name, role FROM admin_users WHERE LOWER(email) = LOWER($1) AND active = true',
+      [normalized]
     )
     return result?.[0] || null
   } catch (error) {
@@ -39,9 +44,10 @@ async function getUserByEmail(email: string): Promise<AdminUser | null> {
 
 async function verifyPassword(email: string, password: string): Promise<AdminUser | null> {
   try {
+    const normalized = normalizeEmail(email)
     const result = await query<{ id: string; email: string; name: string; role: string; password_hash: string }>(
-      'SELECT id, email, name, role, password_hash FROM admin_users WHERE email = $1 AND active = true',
-      [email]
+      'SELECT id, email, name, role, password_hash FROM admin_users WHERE LOWER(email) = LOWER($1) AND active = true',
+      [normalized]
     )
 
     if (!result || result.length === 0) {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { navigation } from '@/lib/data'
@@ -12,11 +12,25 @@ import { motionDuration, motionEase } from '@/lib/motion'
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const headerRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 28)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
+    const updateOffset = () => {
+      if (!headerRef.current) return
+      const height = headerRef.current.getBoundingClientRect().height
+      if (!Number.isFinite(height) || height <= 0) return
+      document.documentElement.style.setProperty('--header-offset', `${height}px`)
+    }
+
+    updateOffset()
+    window.addEventListener('resize', updateOffset)
+    return () => window.removeEventListener('resize', updateOffset)
   }, [])
 
   useEffect(() => {
@@ -48,6 +62,8 @@ export default function Header() {
   return (
     <>
       <motion.header
+        ref={headerRef}
+        data-site-header
         className={`fixed inset-x-0 top-0 z-40 transition-all duration-300 ${
           isScrolled
             ? 'border-b border-gold-primary/20 bg-black-primary/75 backdrop-blur-xl'
@@ -57,7 +73,7 @@ export default function Header() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: motionDuration.fast, ease: motionEase.premium }}
       >
-        <nav className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-6 lg:px-8">
+        <nav className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-5 sm:h-20 sm:px-6 lg:px-8">
           <button
             type="button"
             onClick={() => scrollToTop()}
@@ -69,7 +85,7 @@ export default function Header() {
             </GoldShimmerText>
           </button>
 
-          <div className="hidden items-center gap-6 md:flex">
+          <div className="hidden items-center gap-5 md:flex">
             {navigation.map((item) => (
               <button
                 key={item.name}
@@ -79,14 +95,14 @@ export default function Header() {
                 {item.name}
               </button>
             ))}
-            <Button size="sm" className="!px-7 !py-3" onClick={() => handleNavClick('#booking')}>
+            <Button size="sm" className="!px-6 !py-3" onClick={() => handleNavClick('#booking')}>
               Book Now
             </Button>
           </div>
 
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gold-primary/20 text-white md:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gold-primary/20 text-white md:hidden"
             aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-navigation"
@@ -106,13 +122,13 @@ export default function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div className="flex h-full flex-col px-6 pb-8 pt-24">
+            <div className="flex h-full flex-col px-5 pb-8 pt-20">
               <div className="mb-8 flex items-center justify-between">
                 <GoldShimmerText size="md">THE STYLE HUB</GoldShimmerText>
                 <button
                   type="button"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gold-primary/25 text-white"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gold-primary/25 text-white"
                   aria-label="Close menu"
                 >
                   <X className="h-5 w-5" />
@@ -124,7 +140,7 @@ export default function Header() {
                   <motion.button
                     key={item.name}
                     onClick={() => handleNavClick(item.href)}
-                    className="w-full rounded-xl border border-gold-primary/15 bg-black-medium/40 px-4 py-4 text-left text-lg text-white"
+                  className="w-full min-h-[44px] rounded-xl border border-gold-primary/15 bg-black-medium/40 px-4 py-3 text-left text-base text-white"
                     initial={{ opacity: 0, x: -16 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}

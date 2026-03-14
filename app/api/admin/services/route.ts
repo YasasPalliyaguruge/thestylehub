@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
-import { withAuth, apiResponse, apiError } from '@/lib/auth-helpers'
+import { withRoles, apiResponse, apiError } from '@/lib/auth-helpers'
 import { createAuditLog, AuditActions, AuditEntityTypes } from '@/lib/audit-log'
 import { z } from 'zod'
 
@@ -18,7 +18,7 @@ const serviceSchema = z.object({
 })
 
 // GET /api/admin/services - List all services
-export const GET = withAuth(async (user) => {
+export const GET = withRoles(['admin', 'employee'], async (user) => {
   try {
     const services = await query(`
       SELECT id, name, description, price::float as price, duration, icon, category, popular, display_order, active, created_at
@@ -34,7 +34,7 @@ export const GET = withAuth(async (user) => {
 })
 
 // POST /api/admin/services - Create a new service
-export const POST = withAuth(async (user, request) => {
+export const POST = withRoles('admin', async (user, request) => {
   try {
     const body = await request.json()
 

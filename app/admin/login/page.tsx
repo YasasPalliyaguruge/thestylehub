@@ -24,7 +24,7 @@ function LoginForm() {
 
     try {
       const result = await signIn('credentials', {
-        email: formData.email,
+        email: formData.email.trim().toLowerCase(),
         password: formData.password,
         redirect: false,
       })

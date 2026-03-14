@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import { SectionWrapper } from '@/components/ui/SectionWrapper'
 import { getServiceIcon, getStepIcon, type StepIconKey } from '@/lib/icon-map'
+import { scrollToElement } from '@/lib/utils'
 
 interface ServiceItem {
   id: string
@@ -324,23 +325,28 @@ export default function BookingWizard() {
     if (!canMoveNext || currentStep >= steps.length - 1) return
     if (currentStep === 0 && formData.stylist) {
       setCurrentStep(2)
+      scrollToElement('booking')
       return
     }
     setCurrentStep((value) => value + 1)
+    scrollToElement('booking')
   }
 
   const prevStep = () => {
     if (currentStep === 0) return
     if (currentStep === 2 && formData.stylist) {
       setCurrentStep(0)
+      scrollToElement('booking')
       return
     }
     setCurrentStep((value) => value - 1)
+    scrollToElement('booking')
   }
 
   const onSubmit = async (data: BookingFormData) => {
     setIsSubmitting(true)
     setErrorMessage('')
+    scrollToElement('booking')
     try {
       const response = await fetch('/api/booking', {
         method: 'POST',
@@ -369,8 +375,8 @@ export default function BookingWizard() {
 
   if (isLoadingData) {
     return (
-      <section id="booking" className="py-32">
-        <div className="mx-auto max-w-4xl px-6 text-center lg:px-8">
+      <section id="booking" className="py-10 sm:py-14">
+        <div className="mx-auto max-w-4xl px-5 text-center sm:px-6 lg:px-8">
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-gold-primary/25 text-gold-primary">
             <Loader2 className="h-5 w-5 animate-spin" />
           </div>
@@ -382,8 +388,8 @@ export default function BookingWizard() {
 
   if (dataError) {
     return (
-      <section id="booking" className="py-32">
-        <div className="mx-auto max-w-4xl px-6 text-center lg:px-8">
+      <section id="booking" className="py-10 sm:py-14">
+        <div className="mx-auto max-w-4xl px-5 text-center sm:px-6 lg:px-8">
           <p className="text-red-400">{dataError}</p>
           <p className="mt-2 text-gray-500">Please refresh the page to try again.</p>
         </div>
@@ -393,9 +399,9 @@ export default function BookingWizard() {
 
   if (isSuccess) {
     return (
-      <SectionWrapper id="booking" className="section-shell py-28 md:py-32">
-        <div className="mx-auto max-w-3xl px-6 lg:px-8">
-          <motion.div className="public-panel overflow-hidden p-8 text-center md:p-12" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}>
+      <SectionWrapper id="booking" className="section-shell py-10 sm:py-14 lg:py-20">
+        <div className="mx-auto max-w-3xl px-5 sm:px-6 lg:px-8">
+          <motion.div className="public-panel overflow-hidden p-5 text-center sm:p-7 md:p-9" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}>
             <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gold-primary text-black shadow-[0_0_36px_rgba(212,175,55,0.28)]">
               <Check className="h-9 w-9" />
             </div>
@@ -405,7 +411,7 @@ export default function BookingWizard() {
               We have sent a confirmation email to {formData.email}. Your stylist and service selections are saved and ready for your visit.
             </p>
 
-            <div className="mt-8 grid gap-4 text-left md:grid-cols-2">
+            <div className="mt-6 grid gap-4 text-left md:grid-cols-2">
               <div className="public-card p-5">
                 <p className="text-xs uppercase tracking-[0.22em] text-gray-500">Appointment</p>
                 <p className="mt-3 text-lg font-medium text-white">{formatLongDate(formData.date)}</p>
@@ -425,7 +431,7 @@ export default function BookingWizard() {
               </div>
             </div>
 
-            <button type="button" onClick={handleBookAnother} className="mt-8 inline-flex items-center justify-center rounded-full border border-gold-primary/25 px-6 py-3 text-sm font-semibold text-gold-primary transition-colors hover:bg-gold-primary/10">
+            <button type="button" onClick={handleBookAnother} className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-full border border-gold-primary/25 px-6 py-3 text-sm font-semibold text-gold-primary transition-colors hover:bg-gold-primary/10">
               Book Another Appointment
             </button>
           </motion.div>
@@ -435,20 +441,20 @@ export default function BookingWizard() {
   }
 
   return (
-    <SectionWrapper id="booking" className="section-shell py-28 md:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mb-12 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(300px,0.8fr)] lg:items-end">
+    <SectionWrapper id="booking" className="section-shell py-10 sm:py-14 lg:py-20">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+        <div className="mb-6 grid gap-6 sm:mb-8 lg:grid-cols-[minmax(0,1fr)_minmax(300px,0.8fr)] lg:items-end">
           <motion.div initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }}>
             <span className="public-eyebrow">Booking</span>
             <h2 className="public-section-title mt-4 max-w-[12ch]">
               Book Your <span className="public-heading-gradient">Salon Experience</span>
             </h2>
-            <p className="public-section-copy mt-5 max-w-2xl">
+            <p className="public-section-copy mt-4 max-w-2xl">
               Build the appointment that fits your look, choose your stylist, and confirm a time with live availability.
             </p>
           </motion.div>
 
-          <motion.div className="public-panel flex flex-wrap items-center gap-3 p-5" initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ delay: 0.08 }}>
+          <motion.div className="public-panel flex flex-wrap items-center gap-3 p-4 sm:p-5" initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ delay: 0.08 }}>
             <span className="public-chip">
               <ShieldCheck className="h-3.5 w-3.5 text-gold-primary" />
               Live availability
@@ -464,8 +470,8 @@ export default function BookingWizard() {
           </motion.div>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
-          <div className="public-panel p-5 md:p-7">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
+          <div className="public-panel p-4 sm:p-5 md:p-7">
             <div className="grid gap-3 md:grid-cols-4">
               {steps.map((step, index) => {
                 const StepIcon = getStepIcon(step.id)
@@ -476,9 +482,12 @@ export default function BookingWizard() {
                     key={step.id}
                     type="button"
                     onClick={() => {
-                      if (complete || index <= currentStep) setCurrentStep(index)
+                      if (complete || index <= currentStep) {
+                        setCurrentStep(index)
+                        scrollToElement('booking')
+                      }
                     }}
-                    className={`rounded-2xl border px-4 py-4 text-left transition-colors ${
+                    className={`min-h-[44px] rounded-2xl border px-4 py-4 text-left transition-colors ${
                       active ? 'border-gold-primary/45 bg-gold-primary/10' : 'border-gold-primary/15 bg-black/35 hover:border-gold-primary/30'
                     }`}
                     whileHover={{ y: -1 }}
@@ -542,7 +551,7 @@ export default function BookingWizard() {
                           </div>
                           <h4 className="mt-5 text-lg font-semibold text-white">{service.name}</h4>
                           <p className="mt-2 text-sm text-gray-400">{service.category}</p>
-                          <div className="mt-5 flex items-center justify-between gap-3">
+                          <div className="mt-4 flex items-center justify-between gap-3">
                             <span className="text-sm font-semibold text-gold-primary">LKR {service.price.toLocaleString()}</span>
                             {service.popular ? <span className="public-chip !text-[0.56rem]">Popular</span> : null}
                           </div>
@@ -599,11 +608,11 @@ export default function BookingWizard() {
               ) : null}
 
               {currentStep === 2 ? (
-                <div className="grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+                <div className="grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
                   <div>
                     <h3 className="text-2xl font-semibold text-white">Pick a date</h3>
                     <p className="mt-2 text-sm text-gray-400">Appointments open for the next two weeks.</p>
-                    <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                    <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
                       {dates.map((date) => {
                         const value = formatDateForValue(date)
                         const active = formData.date === value
@@ -612,7 +621,7 @@ export default function BookingWizard() {
                             key={value}
                             type="button"
                             onClick={() => setValue('date', value)}
-                            className={`rounded-2xl border p-4 text-left transition-colors ${
+                            className={`min-h-[44px] rounded-2xl border p-4 text-left transition-colors ${
                               active ? 'border-gold-primary/45 bg-gold-primary text-black' : 'border-gold-primary/15 bg-black/40 text-white hover:border-gold-primary/30'
                             }`}
                             whileHover={{ y: -1 }}
@@ -635,7 +644,7 @@ export default function BookingWizard() {
                       {isLoadingAvailability ? <Loader2 className="h-5 w-5 animate-spin text-gold-primary" /> : null}
                     </div>
 
-                    <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                    <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
                       {timeSlots.map((time) => {
                         const booked = bookedSlots.includes(time)
                         const active = formData.time === time
@@ -647,7 +656,7 @@ export default function BookingWizard() {
                               if (!booked) setValue('time', time)
                             }}
                             disabled={booked}
-                            className={`rounded-2xl border px-4 py-3 text-sm transition-colors ${
+                            className={`min-h-[44px] rounded-2xl border px-4 py-3 text-sm transition-colors ${
                               active
                                 ? 'border-gold-primary/45 bg-gold-primary text-black'
                                 : booked
@@ -666,23 +675,23 @@ export default function BookingWizard() {
               ) : null}
 
               {currentStep === 3 ? (
-                <form onSubmit={handleSubmit(onSubmit)} className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.78fr)]">
-                  <div className="space-y-5">
+                <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.78fr)]">
+                  <div className="space-y-4">
                     <div>
                       <label className="mb-2 block text-sm font-medium text-white">Full Name</label>
-                      <input {...register('name')} type="text" placeholder="John Doe" className="w-full rounded-2xl border border-gold-primary/20 bg-black/45 px-4 py-3 text-white outline-none transition-colors placeholder:text-gray-500 focus:border-gold-primary/40" />
+                      <input {...register('name')} type="text" placeholder="John Doe" className="w-full min-h-[44px] rounded-2xl border border-gold-primary/20 bg-black/45 px-4 py-3 text-white outline-none transition-colors placeholder:text-gray-500 focus:border-gold-primary/40" />
                       {errors.name ? <p className="mt-1 text-xs text-red-400">{errors.name.message}</p> : null}
                     </div>
 
                     <div>
                       <label className="mb-2 block text-sm font-medium text-white">Email Address</label>
-                      <input {...register('email')} type="email" placeholder="john@example.com" className="w-full rounded-2xl border border-gold-primary/20 bg-black/45 px-4 py-3 text-white outline-none transition-colors placeholder:text-gray-500 focus:border-gold-primary/40" />
+                      <input {...register('email')} type="email" placeholder="john@example.com" className="w-full min-h-[44px] rounded-2xl border border-gold-primary/20 bg-black/45 px-4 py-3 text-white outline-none transition-colors placeholder:text-gray-500 focus:border-gold-primary/40" />
                       {errors.email ? <p className="mt-1 text-xs text-red-400">{errors.email.message}</p> : null}
                     </div>
 
                     <div>
                       <label className="mb-2 block text-sm font-medium text-white">Phone Number</label>
-                      <input {...register('phone')} type="tel" placeholder="+94 (31) 223-4567" className="w-full rounded-2xl border border-gold-primary/20 bg-black/45 px-4 py-3 text-white outline-none transition-colors placeholder:text-gray-500 focus:border-gold-primary/40" />
+                      <input {...register('phone')} type="tel" placeholder="+94 (31) 223-4567" className="w-full min-h-[44px] rounded-2xl border border-gold-primary/20 bg-black/45 px-4 py-3 text-white outline-none transition-colors placeholder:text-gray-500 focus:border-gold-primary/40" />
                       {errors.phone ? <p className="mt-1 text-xs text-red-400">{errors.phone.message}</p> : null}
                     </div>
 
@@ -696,7 +705,7 @@ export default function BookingWizard() {
                       <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">{errorMessage}</div>
                     ) : null}
 
-                    <button type="submit" disabled={isSubmitting} className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold-primary px-6 py-3.5 text-sm font-semibold text-black transition-colors hover:bg-[#e4c455] disabled:cursor-not-allowed disabled:opacity-60">
+                    <button type="submit" disabled={isSubmitting} className="inline-flex w-full min-h-[44px] items-center justify-center gap-2 rounded-full bg-gold-primary px-6 py-3.5 text-sm font-semibold text-black transition-colors hover:bg-[#e4c455] disabled:cursor-not-allowed disabled:opacity-60">
                       {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}
                       {isSubmitting ? 'Confirming...' : 'Confirm Booking'}
                     </button>
@@ -740,33 +749,6 @@ export default function BookingWizard() {
               ) : null}
             </motion.div>
 
-            <div className="mt-8 flex flex-col gap-4 border-t border-gold-primary/12 pt-6 sm:flex-row sm:items-center sm:justify-between">
-              <button
-                type="button"
-                onClick={prevStep}
-                disabled={currentStep === 0}
-                className={`inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-colors ${
-                  currentStep === 0 ? 'cursor-not-allowed border border-gold-primary/12 text-gray-600' : 'border border-gold-primary/24 text-gold-primary hover:bg-gold-primary/10'
-                }`}
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Back
-              </button>
-
-              {currentStep < 3 ? (
-                <button
-                  type="button"
-                  onClick={nextStep}
-                  disabled={!canMoveNext}
-                  className={`inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors ${
-                    canMoveNext ? 'bg-gold-primary text-black hover:bg-[#e4c455]' : 'cursor-not-allowed border border-gold-primary/12 text-gray-600'
-                  }`}
-                >
-                  {currentStep === 2 ? 'Continue to Details' : 'Continue'}
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              ) : null}
-            </div>
           </div>
 
           <div className="space-y-5 lg:sticky lg:top-28 lg:self-start">
@@ -822,23 +804,35 @@ export default function BookingWizard() {
               </div>
             </div>
 
-            <div className="public-card p-5">
-              <p className="text-xs uppercase tracking-[0.22em] text-gold-primary">What to expect</p>
-              <ul className="mt-4 space-y-3 text-sm leading-6 text-gray-300">
-                <li className="flex gap-3">
-                  <Check className="mt-1 h-4 w-4 text-gold-primary" />
-                  Live availability updates when you pick a stylist and date.
-                </li>
-                <li className="flex gap-3">
-                  <Check className="mt-1 h-4 w-4 text-gold-primary" />
-                  Confirmation sent instantly to your email once the booking is complete.
-                </li>
-                <li className="flex gap-3">
-                  <Check className="mt-1 h-4 w-4 text-gold-primary" />
-                  Packages selected from pricing are carried into the flow automatically.
-                </li>
-              </ul>
+            {/* Navigation buttons - positioned after appointment summary */}
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <button
+                type="button"
+                onClick={prevStep}
+                disabled={currentStep === 0}
+                className={`inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-colors ${
+                  currentStep === 0 ? 'cursor-not-allowed border border-gold-primary/12 text-gray-600' : 'border border-gold-primary/24 text-gold-primary hover:bg-gold-primary/10'
+                }`}
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Back
+              </button>
+
+              {currentStep < 3 ? (
+                <button
+                  type="button"
+                  onClick={nextStep}
+                  disabled={!canMoveNext}
+                  className={`inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors ${
+                    canMoveNext ? 'bg-gold-primary text-black hover:bg-[#e4c455]' : 'cursor-not-allowed border border-gold-primary/12 text-gray-600'
+                  }`}
+                >
+                  {currentStep === 2 ? 'Continue to Details' : 'Continue'}
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              ) : null}
             </div>
+
           </div>
         </div>
       </div>

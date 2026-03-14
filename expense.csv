@@ -1,0 +1,77 @@
+Date,Type,Category,Description,Amount (LKR),Payment Method
+2026-03-12,expense,Food,"Coffee,Tea,cups ",4000.00,Cash
+2026-03-12,expense,Electric devices,"Hardware ",4250.00,Cash
+2026-03-12,expense,Other,"Locks",1800.00,Cash
+2026-03-11,expense,Other,"Status ",9300.00,Cash
+2026-03-11,expense,Salon Service,"For 4 peoples (Staff)",20000.00,Cash
+2026-03-11,expense,Other," Cosmetic ",25000.00,Cash
+2026-03-11,expense,Software,"Stephen ",10000.00,Cash
+2026-03-11,expense,Food,"Staff ",2750.00,Cash
+2026-03-10,expense,Salary,"Viswsa",5000.00,Cash
+2026-03-10,expense,Food,"Viswa",250.00,Cash
+2026-03-09,expense,Other,"Cash register ",13000.00,Cash
+2026-03-09,expense,Cosmetic,"Cosmetic ",134000.00,Credit Card
+2026-03-09,expense,Electric devices,"Ring light ",10000.00,Cash
+2026-03-09,expense,Telecom,"March",5520.00,Cash
+2026-03-08,expense,Other,"Statue holder",4500.00,Cash
+2026-03-08,expense,Other,"Rug,bathroom stuff ",2375.00,Cash
+2026-03-08,expense,Food,"Staff ",1200.00,Cash
+2026-03-08,expense,Electric devices,"Open sign",2200.00,Cash
+2026-03-08,expense,Transport,"Staff transport ",400.00,Cash
+2026-03-08,expense,hardware,"Pluming ",730.00,Cash
+2026-03-06,expense,electric,"Micro,Fridge ",80000.00,Cash
+2026-03-06,expense,Camera,"Camara installation ",39000.00,Cash
+2026-03-06,expense,Telecom,"Telephone ",11895.00,Credit Card
+2026-03-03,expense,Camera,"Power boxes ",4050.00,Cash
+2026-03-03,expense,Tshirts,"Embroidery ",1500.00,Cash
+2026-03-03,expense,Lawyer,"Stool and dryer stands ",15300.00,Cash
+2026-03-02,expense,Salary,"Dilini",10000.00,Credit Card
+2026-02-28,expense,Tshirts,"Gens",12930.00,Credit Card
+2026-02-28,expense,Towels,"Embroid",7000.00,Cash
+2026-02-27,expense,Cosmetic,"Nails ",19180.00,Cash
+2026-02-27,expense,Transport,"Dilini uber",480.00,Cash
+2026-02-27,expense,Salon Service,"Dilini",5000.00,Cash
+2026-02-27,expense,Cosmetic,"Hair Care",116400.00,Cash
+2026-02-27,expense,Shopping,"Software Advertising ",25000.00,Cash
+2026-02-27,expense,Other," Banners ",9000.00,Cash
+2026-02-18,expense,A.C.,"Cosmetic ",36450.00,Cash
+2026-02-18,expense,Towels,"Towels",13975.00,Cash
+2026-02-18,expense,Transport,"Highway,taxi ",1400.00,Cash
+2026-02-18,expense,Food,"Food ",2700.00,Credit Card
+2026-02-18,expense,Tshirts,"T shirts",11220.00,Credit Card
+2026-02-16,expense,Technician,"Technician ",10000.00,Cash
+2026-02-16,expense,Printer roll,"Printer roll",600.00,Cash
+2026-02-15,expense,Transport,"Transport for cosmetic",950.00,Cash
+2026-02-15,expense,Designer,"Designer",2500000.00,Cash
+2026-02-15,expense,Hot water installer,"Hot water installer",5000.00,Cash
+2026-02-15,expense,Electrician,"Electrician",20000.00,Cash
+2026-02-15,expense,A.C.,"A.C.",382000.00,Cash
+2026-02-15,expense,Transport,"Uber",2500.00,Cash
+2026-02-15,expense,A.C.,"A.C.",225000.00,Cash
+2026-02-09,expense,Telecom,"SLT wifi",15500.00,Cash
+2026-02-07,expense,lunch,"lunch with hair dresser",9069.00,Cash
+2026-02-07,expense,Cosmetic,"Cosmetic",43640.00,Cash
+2026-02-07,expense,Cosmetic,"cosmetic",67320.00,Cash
+2026-02-06,expense,Electric devices,"Electric devices",5340.00,Cash
+2026-02-06,expense,hardware,"hardware",340.00,Cash
+2026-02-05,expense,A.C.,"plugs",60.00,Cash
+2026-02-04,expense,cement,"cement",1080.00,Cash
+2026-02-03,expense,hardware,"hardware",750.00,Cash
+2026-02-03,expense,hardware,"hardware",34650.00,Cash
+2026-01-29,expense,A.C.,"hardware",1400.00,Credit Card
+2026-01-27,expense,Printer,"POS Printer",18500.00,Cash
+2026-01-27,expense,electric,"electric",2700.00,Credit Card
+2026-01-24,expense,electric,"electric",8400.00,Credit Card
+2026-01-24,expense,electric,"electric",3280.00,Credit Card
+2026-01-24,expense,electric,"electric",57100.00,Cash
+2026-01-22,expense,TV,"TV",94776.30,Cash
+2026-01-22,expense,electric,"electric",5320.00,Cash
+2026-01-19,expense,A.C.,"A.C.",16000.00,Cash
+2026-01-19,expense,Nails,"UV Lamp",11500.00,Cash
+2026-01-16,expense,Modern salon suppliers,"Modern salon suppliers",801500.00,Cash
+2026-01-13,expense,A.C.,"DVR",24000.00,Cash
+2026-01-13,expense,Hot water unit,"Hot water unit",58000.00,Cash
+2026-01-12,expense,Cosmetic,"Cosmetic",161710.00,Cash
+2026-01-10,expense,Key Money for the building,"Key Money for the building",500000.00,Cash
+2026-01-10,expense,Lawyer,"Lawyer",2500.00,Cash
+2026-01-09,expense,Camera,"CCTV",69650.00,Cash

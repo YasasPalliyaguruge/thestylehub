@@ -3,20 +3,17 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { ArrowLeft, Plus, Upload } from 'lucide-react'
+import { ArrowLeft, Plus } from 'lucide-react'
 import { AdminFormSection, AdminPageTransition, AdminShellHeader } from '@/components/admin/ui'
-import { uploadImageToCloudinary } from '@/lib/cloudinary-upload'
 
 export default function NewTeamMemberPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [uploadingImage, setUploadingImage] = useState(false)
   const [error, setError] = useState('')
   const [formData, setFormData] = useState({
     name: '',
     role: '',
     specialties: '',
-    image_url: '',
     bio: '',
     experience_years: '',
     rating: '',
@@ -38,7 +35,6 @@ export default function NewTeamMemberPage() {
           .split(',')
           .map((v) => v.trim())
           .filter(Boolean),
-        image_url: formData.image_url.trim() || '',
         bio: formData.bio.trim() || undefined,
         active: formData.active,
         display_order: formData.display_order,
@@ -73,19 +69,6 @@ export default function NewTeamMemberPage() {
     }
   }
 
-  const handleTeamImageUpload = async (file: File | null) => {
-    if (!file) return
-    setError('')
-    setUploadingImage(true)
-    try {
-      const secureUrl = await uploadImageToCloudinary(file, { target: 'team' })
-      setFormData((prev) => ({ ...prev, image_url: secureUrl }))
-    } catch (err: any) {
-      setError(err.message || 'Failed to upload image')
-    } finally {
-      setUploadingImage(false)
-    }
-  }
 
   return (
     <AdminPageTransition className="space-y-5 max-w-4xl">
@@ -136,38 +119,6 @@ export default function NewTeamMemberPage() {
                 placeholder="Balayage, Color Correction, Bridal"
                 className="px-4 py-3"
               />
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm text-gray-300 mb-2">Profile Image URL</label>
-              <input
-                type="url"
-                value={formData.image_url}
-                onChange={(e) => setFormData((prev) => ({ ...prev, image_url: e.target.value }))}
-                placeholder="https://..."
-                className="px-4 py-3"
-              />
-              <div className="mt-3 flex flex-wrap items-center gap-3">
-                <label className="admin-btn-secondary cursor-pointer">
-                  <Upload className="w-4 h-4" />
-                  {uploadingImage ? 'Uploading...' : 'Upload Image'}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    disabled={uploadingImage}
-                    onChange={(e) => handleTeamImageUpload(e.target.files?.[0] || null)}
-                  />
-                </label>
-              </div>
-              {formData.image_url ? (
-                <div className="mt-3">
-                  <img
-                    src={formData.image_url}
-                    alt="Team preview"
-                    className="h-32 w-24 rounded-lg object-cover border border-gold-primary/20"
-                  />
-                </div>
-              ) : null}
             </div>
             <div className="md:col-span-2">
               <label className="block text-sm text-gray-300 mb-2">Bio</label>

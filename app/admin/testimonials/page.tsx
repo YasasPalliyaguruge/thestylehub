@@ -28,10 +28,24 @@ export default function TestimonialsPage() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'featured' | 'active' | 'inactive'>('all')
   const [error, setError] = useState('')
+  const [role, setRole] = useState<'admin' | 'employee'>('admin')
 
   useEffect(() => {
     fetchTestimonials()
+    fetchRole()
   }, [])
+
+  const fetchRole = async () => {
+    try {
+      const response = await fetch('/api/admin/settings')
+      const data = await response.json()
+      if (response.ok && data.data?.role) {
+        setRole(data.data.role)
+      }
+    } catch (error) {
+      console.error('Error fetching role:', error)
+    }
+  }
 
   const fetchTestimonials = async () => {
     try {
@@ -171,9 +185,11 @@ export default function TestimonialsPage() {
                       <Link href={`/admin/testimonials/${item.id}`} className="admin-btn-secondary">
                         Edit
                       </Link>
-                      <button onClick={() => handleDelete(item.id)} className="admin-btn-secondary text-red-300 border-red-500/40">
-                        Delete
-                      </button>
+                      {role === 'admin' && (
+                        <button onClick={() => handleDelete(item.id)} className="admin-btn-secondary text-red-300 border-red-500/40">
+                          Delete
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>

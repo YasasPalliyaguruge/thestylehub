@@ -34,10 +34,24 @@ export default function PricingPage() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'men' | 'women'>('all')
   const [error, setError] = useState('')
+  const [role, setRole] = useState<'admin' | 'employee'>('admin')
 
   useEffect(() => {
     fetchPackages()
+    fetchRole()
   }, [])
+
+  const fetchRole = async () => {
+    try {
+      const response = await fetch('/api/admin/settings')
+      const data = await response.json()
+      if (response.ok && data.data?.role) {
+        setRole(data.data.role)
+      }
+    } catch (error) {
+      console.error('Error fetching role:', error)
+    }
+  }
 
   const fetchPackages = async () => {
     try {
@@ -160,9 +174,11 @@ export default function PricingPage() {
                 <Link href={`/admin/pricing/${pkg.id}`} className="admin-btn-secondary">
                   Edit
                 </Link>
-                <button onClick={() => handleDelete(pkg.id)} className="admin-btn-secondary text-red-300 border-red-500/40">
-                  Delete
-                </button>
+                {role === 'admin' && (
+                  <button onClick={() => handleDelete(pkg.id)} className="admin-btn-secondary text-red-300 border-red-500/40">
+                    Delete
+                  </button>
+                )}
               </div>
             </AdminCard>
           ))}

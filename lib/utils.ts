@@ -40,6 +40,22 @@ function smoothScrollTo(targetY: number, duration: number = 1200) {
   requestAnimationFrame(animation)
 }
 
+function getHeaderOffset() {
+  if (typeof window === 'undefined') return 80
+
+  const header = document.querySelector<HTMLElement>('[data-site-header]')
+  if (header) {
+    const height = header.getBoundingClientRect().height
+    if (Number.isFinite(height) && height > 0) return height
+  }
+
+  const rootStyles = getComputedStyle(document.documentElement)
+  const cssOffset = parseFloat(rootStyles.getPropertyValue('--header-offset'))
+  if (Number.isFinite(cssOffset) && cssOffset > 0) return cssOffset
+
+  return 80
+}
+
 // Smooth scroll to element
 export function scrollToElement(id: string, duration: number = 1200) {
   const element = document.getElementById(id)
@@ -49,9 +65,11 @@ export function scrollToElement(id: string, duration: number = 1200) {
     return
   }
 
-  const headerOffset = 80 // Fixed header height (h-20)
+  const headerOffset = getHeaderOffset()
   const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
-  const offsetPosition = elementPosition - headerOffset
+  const elementStyles = getComputedStyle(element)
+  const paddingTop = parseFloat(elementStyles.paddingTop) || 0
+  const offsetPosition = Math.max(0, elementPosition - headerOffset + paddingTop)
 
   // Try to use Lenis if available (for smooth scroll library)
   const lenisInstance = (window as any).lenis
@@ -65,5 +83,11 @@ export function scrollToElement(id: string, duration: number = 1200) {
 
 // Scroll to top
 export function scrollToTop(duration: number = 1000) {
+  const lenisInstance = (window as any)?.lenis
+  if (lenisInstance) {
+    lenisInstance.scrollTo(0, { duration: duration / 1000 })
+    return
+  }
+
   smoothScrollTo(0, duration)
 }

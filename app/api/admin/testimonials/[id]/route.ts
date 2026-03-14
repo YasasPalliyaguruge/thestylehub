@@ -1,4 +1,4 @@
-import { withAuth, apiResponse, apiError } from '@/lib/auth-helpers'
+import { withAuth, withRoles, apiResponse, apiError } from '@/lib/auth-helpers'
 import { createAuditLog, AuditActions, AuditEntityTypes } from '@/lib/audit-log'
 import { query } from '@/lib/db'
 import { z } from 'zod'
@@ -27,7 +27,7 @@ export const GET = withAuth(async (user, request, context) => {
   }
 })
 
-export const PUT = withAuth(async (user, request, context) => {
+export const PUT = withRoles('admin', async (user, request, context) => {
   try {
     const { id } = await context.params
     const body = await request.json()
@@ -71,13 +71,13 @@ export const PUT = withAuth(async (user, request, context) => {
   }
 })
 
-export const DELETE = withAuth(async (user, request, context) => {
+export const DELETE = withRoles('admin', async (user, request, context) => {
   try {
     const { id } = await context.params
     const currentResult = await query('SELECT * FROM testimonials WHERE id = $1', [id])
     if (!currentResult?.length) return apiError('Testimonial not found', 404)
 
-    await query('UPDATE testimonials SET active = false WHERE id = $1', [id])
+    await query('DELETE FROM testimonials WHERE id = $1', [id])
 
     await createAuditLog({
       admin_id: user.id,

@@ -15,6 +15,13 @@
   --radius-xl: 1.25rem;
   --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.35);
   --shadow-elevated: 0 24px 70px rgba(0, 0, 0, 0.5);
+  --header-offset: clamp(4rem, 6vw, 5rem);
+  --section-py: clamp(2.5rem, 6vw, 4.5rem);
+  --section-py-lg: clamp(3.5rem, 7vw, 6rem);
+  --card-pad: clamp(1rem, 4vw, 1.5rem);
+  --card-gap: clamp(0.75rem, 3vw, 1.5rem);
+  --body-text: clamp(0.95rem, 3.2vw, 1.08rem);
+  --title-text: clamp(1.65rem, 6vw, 3rem);
 }
 
 .particle-field {
@@ -28,11 +35,20 @@
 .public-main {
   position: relative;
   z-index: 10;
+  overflow-x: clip;
 }
 
 .public-section {
   position: relative;
   z-index: 10;
+  scroll-margin-top: var(--header-offset);
+}
+
+.public-main img,
+.public-main video {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
 }
 
 .public-card {
@@ -75,9 +91,9 @@
 
 .public-section-title {
   font-family: var(--font-syne), sans-serif;
-  font-size: clamp(2rem, 5.5vw, 4.5rem);
-  line-height: 1.04;
-  letter-spacing: -0.02em;
+  font-size: var(--title-text);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
   color: var(--text-main);
 }
 
@@ -91,8 +107,8 @@
 
 .public-section-copy {
   color: var(--text-muted);
-  font-size: clamp(1rem, 1.6vw, 1.18rem);
-  line-height: 1.65;
+  font-size: var(--body-text);
+  line-height: 1.6;
   max-width: 44rem;
 }
 
@@ -114,9 +130,9 @@
   gap: 0.35rem;
   border-radius: 999px;
   border: 1px solid rgba(212, 175, 55, 0.2);
-  padding: 0.32rem 0.72rem;
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
+  padding: 0.32rem 0.6rem;
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #ddd7c8;
   background: rgba(12, 12, 12, 0.72);
@@ -126,7 +142,7 @@
   border: 1px solid rgba(212, 175, 55, 0.16);
   border-radius: 1rem;
   background: rgba(10, 10, 10, 0.68);
-  padding: 1rem 1.15rem;
+  padding: 0.85rem 1rem;
 }
 
 .public-metric-value {
@@ -139,8 +155,8 @@
 .public-metric-label {
   margin-top: 0.45rem;
   color: var(--text-soft);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   line-height: 1.45;
 }
@@ -252,5 +268,21 @@
 
   .public-display {
     letter-spacing: -0.04em;
+  }
+}
+
+@media (max-width: 430px) {
+  .public-section-title,
+  .public-display {
+    letter-spacing: -0.01em;
+    line-height: 1.12;
+  }
+
+  .public-section-copy {
+    line-height: 1.55;
+  }
+
+  .public-chip {
+    letter-spacing: 0.08em;
   }
 }

@@ -18,7 +18,6 @@ interface TeamMember {
   name: string
   role: string
   specialties: string[] | null
-  image_url: string | null
   bio: string | null
   experience_years: number | null
   rating: number | null
@@ -36,10 +35,24 @@ export default function TeamPage() {
   const [team, setTeam] = useState<TeamMember[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive'>('all')
+  const [role, setRole] = useState<'admin' | 'employee'>('admin')
 
   useEffect(() => {
     fetchTeam()
+    fetchRole()
   }, [])
+
+  const fetchRole = async () => {
+    try {
+      const response = await fetch('/api/admin/settings')
+      const data = await response.json()
+      if (response.ok && data.data?.role) {
+        setRole(data.data.role)
+      }
+    } catch (error) {
+      console.error('Error fetching role:', error)
+    }
+  }
 
   const fetchTeam = async () => {
     try {
@@ -116,13 +129,9 @@ export default function TeamPage() {
               <div className="p-5">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    {member.image_url ? (
-                      <img src={member.image_url} alt={member.name} className="w-14 h-14 rounded-full object-cover border border-gold-primary/20" />
-                    ) : (
-                      <div className="w-14 h-14 rounded-full bg-gold-primary/10 border border-gold-primary/20 flex items-center justify-center text-gold-primary">
-                        <Users className="w-5 h-5" />
-                      </div>
-                    )}
+                    <div className="w-14 h-14 rounded-full bg-gold-primary/10 border border-gold-primary/20 flex items-center justify-center text-gold-primary">
+                      <Users className="w-5 h-5" />
+                    </div>
                     <div>
                       <p className="text-white font-medium">{member.name}</p>
                       <p className="text-gold-primary text-sm">{member.role}</p>
@@ -155,9 +164,11 @@ export default function TeamPage() {
 
               <div className="px-5 py-4 border-t border-gold-primary/10 flex justify-end gap-2">
                 <Link href={`/admin/team/${member.id}`} className="admin-btn-secondary">Edit</Link>
-                <button onClick={() => handleDelete(member.id)} className="admin-btn-secondary text-red-300 border-red-500/30">
-                  Remove
-                </button>
+                {role === 'admin' && (
+                  <button onClick={() => handleDelete(member.id)} className="admin-btn-secondary text-red-300 border-red-500/30">
+                    Delete
+                  </button>
+                )}
               </div>
             </AdminCard>
           ))}

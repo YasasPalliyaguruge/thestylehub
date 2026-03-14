@@ -38,9 +38,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps & Omit<HTMLMotionProps<
             'text-gray-400': variant === 'ghost',
 
             // Sizes
-            'px-6 py-3 text-sm': size === 'sm',
-            'px-8 py-4 text-base': size === 'md',
-            'px-10 py-5 text-lg': size === 'lg',
+            'px-6 py-3 text-sm min-h-[44px]': size === 'sm',
+            'px-8 py-4 text-base min-h-[44px]': size === 'md',
+            'px-10 py-5 text-lg min-h-[44px]': size === 'lg',
 
             // Full width
             'w-full': fullWidth,
